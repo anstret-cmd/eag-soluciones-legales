@@ -1,0 +1,2599 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EAG Soluciones Legales · LegalTech 2026</title>
+<script>
+/* ============================================================
+   ANTI-FOUC: aplica el tema guardado ANTES de pintar la página
+   1) localStorage ('eag-theme')  2) preferencia del sistema (OS)
+   ============================================================ */
+(function(){
+  try{
+    var saved = localStorage.getItem('eag-theme');
+    var theme = saved || (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+    document.documentElement.setAttribute('data-theme', theme);
+  }catch(e){
+    document.documentElement.setAttribute('data-theme','dark');
+  }
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+<style>
+:root,
+html[data-theme="dark"]{
+  /* ---- Marca (constante en ambos temas) ---- */
+  --dorado:#c7a36a;
+  --dorado2:#e7c48f;
+  --dorado3:#f5ddb5;
+  --cyan:#63c4ff;
+  --green:#4ade80;
+  --azul:#061423;
+  --azul2:#0c2d4d;
+
+  /* ---- Fondo general del sitio ---- */
+  --bg-blob1:#0d3558;
+  --bg-blob2:#6b4515;
+  --bg-g1:#030c18;
+  --bg-g2:#061a2e;
+  --bg-g3:#030c18;
+  --text-color:#ffffff;
+  --nav-bg:rgba(3,12,24,.84);
+
+  /* ---- Grises translúcidos reutilizados en bordes/fondos de botones, tabs, etc. ---- */
+  --wht-02:rgba(255,255,255,.02);
+  --wht-025:rgba(255,255,255,.025);
+  --wht-03:rgba(255,255,255,.03);
+  --wht-04:rgba(255,255,255,.04);
+  --wht-05:rgba(255,255,255,.05);
+  --wht-07:rgba(255,255,255,.07);
+  --wht-08:rgba(255,255,255,.08);
+  --wht-09:rgba(255,255,255,.09);
+  --wht-1:rgba(255,255,255,.1);
+  --wht-14:rgba(255,255,255,.14);
+  --wht-16:rgba(255,255,255,.16);
+  --wht-2:rgba(255,255,255,.2);
+  --wht-22:rgba(255,255,255,.22);
+  --wht-25:rgba(255,255,255,.25);
+
+  /* ---- Superficies "glass" (tarjetas) ---- */
+  --glass:var(--wht-04);
+  --glass-b:var(--wht-09);
+
+  /* ---- Textos atenuados (varios tonos) ---- */
+  --tm-1:#b8c8d8;
+  --tm-1b:#b8c8d6;
+  --tm-2:#8faabf;
+  --tm-3:#7a9ab0;
+  --tm-4:#5a7a8a;
+  --tm-5:#3a5568;
+  --tm-warm:#d8c39d;
+  --tm-hi:#c8d8e8;
+}
+
+/* =========================================================
+   MODO CLARO — data-theme="light" en <html>
+   Redefine únicamente las variables de superficie/texto;
+   el acento dorado/cian se conserva para mantener la identidad
+   visual de la marca en ambos modos.
+   ========================================================= */
+html[data-theme="light"]{
+  --bg-blob1:#cfe0f2;
+  --bg-blob2:#f3ddb0;
+  --bg-g1:#f7f6f2;
+  --bg-g2:#ffffff;
+  --bg-g3:#f2eee5;
+  --text-color:#0c2233;
+  --nav-bg:rgba(255,255,255,.86);
+
+  --wht-02:rgba(10,25,42,.032);
+  --wht-025:rgba(10,25,42,.04);
+  --wht-03:rgba(10,25,42,.048);
+  --wht-04:rgba(10,25,42,.064);
+  --wht-05:rgba(10,25,42,.08);
+  --wht-07:rgba(10,25,42,.112);
+  --wht-08:rgba(10,25,42,.128);
+  --wht-09:rgba(10,25,42,.144);
+  --wht-1:rgba(10,25,42,.16);
+  --wht-14:rgba(10,25,42,.224);
+  --wht-16:rgba(10,25,42,.256);
+  --wht-2:rgba(10,25,42,.32);
+  --wht-22:rgba(10,25,42,.352);
+  --wht-25:rgba(10,25,42,.4);
+
+  --glass:rgba(10,25,42,.04);
+  --glass-b:rgba(10,25,42,.1);
+
+  --tm-1:#1f2d3a;
+  --tm-1b:#243544;
+  --tm-2:#33495c;
+  --tm-3:#3d5568;
+  --tm-4:#4f6576;
+  --tm-5:#647b8c;
+  --tm-warm:#8a6a35;
+  --tm-hi:#1f3244;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Montserrat',sans-serif;
+  background:
+    radial-gradient(ellipse at 10% 15%,var(--bg-blob1) 0%,transparent 40%),
+    radial-gradient(ellipse at 88% 82%,var(--bg-blob2) 0%,transparent 38%),
+    linear-gradient(150deg,var(--bg-g1) 0%,var(--bg-g2) 55%,var(--bg-g3) 100%);
+  color:var(--text-color);
+  overflow-x:hidden;
+  transition:background .5s ease,color .5s ease;
+}
+/* CANVAS */
+#neural-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.4;}
+/* NAV */
+.navbar{position:fixed;top:0;width:100%;z-index:999;background:var(--nav-bg);backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-b);transition:background .4s ease;}
+.nav-container{max-width:1440px;margin:auto;padding:15px 44px;display:flex;justify-content:space-between;align-items:center;}
+.logo-img{width:165px;transition:.5s;filter:drop-shadow(0 0 14px rgba(199,163,106,.28));}
+.logo-img:hover{transform:scale(1.05);filter:drop-shadow(0 0 28px rgba(231,196,143,.7));}
+.nav-links{display:flex;gap:30px;align-items:center;}
+.nav-links a{text-decoration:none;color:var(--tm-1);font-weight:500;font-size:14px;letter-spacing:.3px;position:relative;transition:.35s;}
+.nav-links a::after{content:'';position:absolute;width:0;height:1.5px;left:0;bottom:-7px;background:var(--dorado2);transition:.35s;}
+.nav-links a:hover{color:var(--dorado2);}
+.nav-links a:hover::after{width:100%;}
+.nav-cta{background:linear-gradient(135deg,var(--dorado),#f0d2a2);color:#061423!important;font-size:13px;font-weight:800;padding:9px 20px;border-radius:30px;letter-spacing:.4px;text-decoration:none;transition:.35s;box-shadow:0 6px 20px rgba(199,163,106,.3);}
+.nav-cta:hover{transform:translateY(-3px) scale(1.04);}
+.nav-cta::after{display:none!important;}
+/* THEME TOGGLE */
+.theme-toggle{position:relative;width:52px;height:28px;border-radius:30px;border:1px solid var(--glass-b);background:var(--wht-05);cursor:pointer;display:inline-flex;align-items:center;padding:3px;transition:.35s;flex-shrink:0;}
+.theme-toggle:hover{border-color:rgba(199,163,106,.4);}
+.theme-toggle .theme-icon{position:absolute;top:50%;transform:translateY(-50%);font-size:12px;line-height:1;transition:.35s;pointer-events:none;}
+.theme-toggle .theme-icon.sun{left:6px;opacity:0;}
+.theme-toggle .theme-icon.moon{right:6px;opacity:1;}
+.theme-toggle::before{content:'';position:absolute;top:2px;left:2px;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--dorado),#f0d2a2);box-shadow:0 2px 6px rgba(0,0,0,.35);transition:.35s cubic-bezier(.4,0,.2,1);}
+html[data-theme="light"] .theme-toggle::before{transform:translateX(24px);}
+html[data-theme="light"] .theme-toggle .theme-icon.sun{opacity:1;}
+html[data-theme="light"] .theme-toggle .theme-icon.moon{opacity:0;}
+@media(max-width:900px){.theme-toggle{margin-left:auto;}}
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;padding:160px 8% 110px;position:relative;z-index:2;}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:68px;max-width:1440px;margin:auto;align-items:center;}
+.hero-text{animation:slideL 1.4s ease;}
+@keyframes slideL{from{opacity:0;transform:translateX(-80px);}to{opacity:1;transform:translateX(0);}}
+.badge-dyn{display:inline-flex;align-items:center;gap:10px;padding:10px 20px;border-radius:40px;background:rgba(199,163,106,.09);border:1px solid rgba(199,163,106,.3);color:var(--dorado2);margin-bottom:24px;font-size:12px;letter-spacing:.7px;flex-wrap:wrap;}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:pdot 1.8s infinite;}
+@keyframes pdot{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.6);opacity:.4;}}
+.ctr-wrap{display:inline-flex;align-items:baseline;gap:4px;}
+.ctr-num{font-size:17px;font-weight:900;color:var(--green);font-variant-numeric:tabular-nums;}
+.ctr-lbl{font-size:11px;color:var(--dorado3);font-weight:600;}
+.sep{color:var(--wht-2);}
+.hero h1{font-family:'Playfair Display',serif;font-size:72px;line-height:1.04;font-weight:900;}
+.hero h1 span{color:var(--dorado2);text-shadow:0 0 30px rgba(199,163,106,.38);}
+.hero-line{width:175px;height:3px;border-radius:20px;margin:26px 0;background:linear-gradient(90deg,transparent,var(--dorado2),transparent);animation:lg 3s infinite;}
+@keyframes lg{0%,100%{opacity:.4;transform:scaleX(.8);}50%{opacity:1;transform:scaleX(1);}}
+.hero-sub{font-size:21px;color:var(--tm-warm);line-height:1.7;margin-bottom:28px;}
+.hero p{color:var(--tm-1b);line-height:1.95;font-size:17px;max-width:610px;margin-bottom:40px;}
+.hero-btns{display:flex;gap:16px;flex-wrap:wrap;}
+.btn{text-decoration:none;padding:16px 32px;border-radius:50px;font-weight:700;transition:.4s;font-size:14px;}
+.btn-p{background:linear-gradient(135deg,var(--dorado),#f0d2a2);color:#061423;box-shadow:0 10px 28px rgba(199,163,106,.38);}
+.btn-p:hover{transform:translateY(-5px) scale(1.03);}
+.btn-s{border:1px solid var(--wht-16);background:var(--wht-04);color:white;backdrop-filter:blur(10px);}
+.btn-s:hover{border-color:var(--dorado2);color:var(--dorado2);}
+/* HERO CARD */
+.hero-card{animation:slideR 1.4s ease;}
+@keyframes slideR{from{opacity:0;transform:translateX(80px);}to{opacity:1;transform:translateX(0);}}
+.main-card{background:var(--glass);border:1px solid var(--glass-b);border-radius:28px;overflow:hidden;backdrop-filter:blur(14px);box-shadow:0 20px 60px rgba(0,0,0,.4);}
+.card-image img{width:100%;height:250px;object-fit:cover;display:block;transition:1s;}
+.main-card:hover .card-image img{transform:scale(1.07);}
+.card-title{padding:26px 26px 4px;font-family:'Playfair Display',serif;font-size:28px;font-weight:700;}
+.card-title span{color:var(--dorado2);}
+.card-desc{padding:0 26px 20px;color:var(--tm-2);font-size:14px;line-height:1.8;}
+.card-info{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--glass-b);}
+.info-box{padding:20px 22px;border-right:1px solid var(--glass-b);border-bottom:1px solid var(--glass-b);transition:.4s;}
+.info-box:hover{background:rgba(199,163,106,.06);}
+.info-box h4{font-size:10px;letter-spacing:1.5px;color:var(--dorado2);margin-bottom:7px;font-weight:700;}
+.info-box p{font-size:12px;color:var(--tm-3);line-height:1.7;}
+/* SECTION HEADER */
+.s-header{text-align:center;margin-bottom:56px;}
+.s-badge{display:inline-block;padding:9px 20px;border-radius:40px;background:rgba(199,163,106,.09);border:1px solid rgba(199,163,106,.26);color:var(--dorado2);margin-bottom:20px;font-size:11px;letter-spacing:2px;font-weight:600;}
+.s-header h2{font-family:'Playfair Display',serif;font-size:50px;font-weight:900;line-height:1.1;}
+.s-header h2 span{color:var(--dorado2);text-shadow:0 0 18px rgba(199,163,106,.28);}
+.s-line{width:130px;height:2.5px;border-radius:20px;margin:22px auto 0;background:linear-gradient(90deg,transparent,var(--dorado2),transparent);}
+/* ABOUT */
+.about{padding:110px 8%;position:relative;z-index:2;}
+.about-cont{max-width:1440px;margin:auto;}
+.about-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-bottom:44px;}
+.about-card{background:var(--glass);border:1px solid var(--glass-b);border-radius:26px;padding:40px 34px;backdrop-filter:blur(12px);transition:.5s;box-shadow:0 8px 35px rgba(0,0,0,.2);}
+.about-card:hover{transform:translateY(-10px);border-color:rgba(199,163,106,.32);box-shadow:0 20px 50px rgba(0,0,0,.32);}
+.icon-c{width:66px;height:66px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:22px;background:rgba(199,163,106,.11);border:1px solid rgba(199,163,106,.22);}
+.about-card h3{font-size:22px;color:var(--dorado2);margin-bottom:14px;font-family:'Playfair Display',serif;}
+.about-card p{color:var(--tm-2);line-height:1.85;font-size:14px;}
+.vals{list-style:none;color:var(--tm-2);font-size:14px;line-height:2.2;}
+.vals li::before{content:'◈ ';color:var(--dorado2);font-size:11px;}
+.svc-banner{background:linear-gradient(135deg,rgba(199,163,106,.14),rgba(199,163,106,.04));border:1px solid rgba(199,163,106,.28);border-radius:22px;padding:38px 48px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;}
+.svc-content h3{font-family:'Playfair Display',serif;font-size:24px;color:var(--dorado2);margin-bottom:9px;}
+.svc-content p{color:var(--tm-2);font-size:14px;}
+.call-btn{text-decoration:none;padding:15px 30px;border-radius:50px;font-weight:800;font-size:14px;letter-spacing:.4px;background:linear-gradient(135deg,var(--dorado),#f0d2a2);color:#061423;transition:.4s;box-shadow:0 8px 22px rgba(199,163,106,.32);white-space:nowrap;}
+.call-btn:hover{transform:translateY(-4px) scale(1.03);}
+/* AREAS */
+.practice-areas{padding:110px 8%;position:relative;z-index:2;}
+.pr-cont{max-width:1440px;margin:auto;}
+.pr-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;}
+.pr-card{background:var(--glass);border:1px solid var(--glass-b);border-radius:22px;padding:30px 26px;backdrop-filter:blur(12px);transition:.5s;box-shadow:0 6px 26px rgba(0,0,0,.18);position:relative;overflow:hidden;}
+.pr-card::before{content:'';position:absolute;top:-50px;right:-50px;width:130px;height:130px;border-radius:50%;background:radial-gradient(circle,rgba(199,163,106,.07),transparent 70%);transition:.5s;}
+.pr-card:hover{transform:translateY(-10px);border-color:rgba(199,163,106,.36);box-shadow:0 20px 46px rgba(0,0,0,.32);}
+.pr-card:hover::before{transform:scale(2);}
+.pr-icon{font-size:34px;margin-bottom:16px;}
+.pr-card h3{font-size:16px;color:var(--dorado2);margin-bottom:14px;font-weight:700;}
+.pr-card ul{list-style:none;}
+.pr-card ul li{font-size:12.5px;color:var(--tm-3);line-height:2.0;padding-left:14px;position:relative;}
+.pr-card ul li::before{content:'→';position:absolute;left:0;color:var(--dorado);font-size:10px;}
+/* NEW AREAS */
+.pr-card.new{border-color:rgba(99,196,255,.18);background:linear-gradient(135deg,rgba(10,26,52,.7),rgba(4,14,28,.85));}
+.pr-card.new::after{content:'2026';position:absolute;top:14px;right:14px;font-size:9px;font-weight:800;letter-spacing:2px;color:var(--cyan);background:rgba(99,196,255,.1);border:1px solid rgba(99,196,255,.22);padding:4px 9px;border-radius:20px;}
+.pr-card.new h3{color:var(--cyan);}
+.pr-card.new ul li::before{color:var(--cyan);}
+.pr-card.new:hover{border-color:rgba(99,196,255,.4);box-shadow:0 20px 46px rgba(99,196,255,.08),0 6px 26px rgba(0,0,0,.32);}
+/* LEGALTECH LAB */
+.lab{padding:110px 8%;position:relative;z-index:2;}
+.lab-cont{max-width:1440px;margin:auto;}
+.lab-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-bottom:44px;}
+.lab-card{border-radius:26px;overflow:hidden;border:1px solid var(--glass-b);box-shadow:0 14px 38px rgba(0,0,0,.28);transition:.5s;cursor:pointer;background:var(--glass);backdrop-filter:blur(12px);}
+.lab-card:hover{transform:translateY(-12px);border-color:rgba(199,163,106,.36);box-shadow:0 28px 56px rgba(0,0,0,.4);}
+.lab-img{overflow:hidden;position:relative;}
+.lab-img img{width:100%;height:240px;object-fit:cover;display:block;transition:1s;}
+.lab-card:hover img{transform:scale(1.08);}
+.lab-tag{position:absolute;top:14px;left:14px;background:rgba(199,163,106,.9);color:#061423;font-size:10px;font-weight:800;letter-spacing:1.5px;padding:5px 13px;border-radius:20px;}
+.lab-tag.blue{background:rgba(99,196,255,.88);color:#030c18;}
+.lab-body{padding:24px 26px;}
+.lab-body h3{font-size:17px;color:var(--dorado2);margin-bottom:9px;font-weight:700;}
+.lab-body p{font-size:13px;color:var(--tm-3);line-height:1.75;margin-bottom:16px;}
+.lab-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:space-between;}
+.lab-pill{font-size:11px;color:#a8bccc;background:var(--wht-05);border:1px solid var(--glass-b);border-radius:16px;padding:5px 11px;display:flex;align-items:center;gap:5px;}
+.lab-pill b{color:var(--dorado2);}
+.lab-enter{text-decoration:none;color:var(--dorado2);font-weight:700;font-size:13px;transition:.4s;letter-spacing:.3px;}
+.lab-enter:hover{color:white;letter-spacing:1.2px;}
+/* SIMULATOR */
+.sim-banner{background:linear-gradient(135deg,rgba(99,196,255,.07),rgba(4,14,28,.92));border:1px solid rgba(99,196,255,.2);border-radius:26px;padding:52px 58px;display:grid;grid-template-columns:1fr auto;gap:46px;align-items:center;margin-bottom:28px;}
+.sim-tag{display:inline-block;padding:7px 16px;border-radius:28px;background:rgba(99,196,255,.1);border:1px solid rgba(99,196,255,.26);color:var(--cyan);font-size:11px;letter-spacing:1.5px;font-weight:700;margin-bottom:18px;}
+.sim-banner h3{font-family:'Playfair Display',serif;font-size:34px;font-weight:900;color:white;margin-bottom:12px;}
+.sim-banner h3 em{font-style:normal;color:var(--cyan);}
+.sim-banner > div:first-child p{color:var(--tm-3);font-size:15px;line-height:1.8;max-width:540px;}
+.sim-visual{background:rgba(99,196,255,.05);border:1px solid rgba(99,196,255,.16);border-radius:20px;padding:34px 32px;min-width:240px;text-align:center;}
+.sim-icon{font-size:52px;margin-bottom:12px;}
+.sim-visual p{font-size:12px;color:var(--cyan);font-weight:600;letter-spacing:.8px;margin-bottom:6px;}
+.sim-visual small{font-size:11px;color:#3a5a6a;}
+.btn-sim{display:inline-block;margin-top:26px;text-decoration:none;padding:14px 32px;border-radius:50px;font-weight:700;font-size:14px;background:rgba(99,196,255,.1);color:var(--cyan);border:1px solid rgba(99,196,255,.3);transition:.4s;}
+.btn-sim:hover{background:rgba(99,196,255,.2);transform:translateY(-4px);box-shadow:0 12px 28px rgba(99,196,255,.13);}
+/* READER */
+.reader-tool{background:var(--glass);border:1px solid var(--glass-b);border-radius:22px;padding:38px 42px;display:grid;grid-template-columns:1fr 1fr;gap:42px;align-items:start;}
+.reader-left h3{font-family:'Playfair Display',serif;font-size:26px;color:var(--dorado2);margin-bottom:12px;}
+.reader-left p{color:var(--tm-3);font-size:14px;line-height:1.8;margin-bottom:20px;}
+.reader-right{background:rgba(3,10,20,.75);border:1px solid var(--glass-b);border-radius:16px;padding:24px;}
+#reader-input{width:100%;height:80px;background:transparent;border:none;outline:none;color:#c8d4e0;font-family:'Montserrat',sans-serif;font-size:13px;line-height:1.75;resize:none;}
+#reader-input::placeholder{color:#2a4050;}
+.r-div{height:1px;background:var(--glass-b);margin:12px 0;}
+#reader-output{font-size:12.5px;color:var(--tm-4);line-height:1.8;min-height:56px;font-style:italic;}
+.r-actions{display:flex;gap:10px;margin-top:14px;}
+.r-btn{flex:1;padding:11px;border-radius:10px;border:none;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;transition:.3s;}
+.r-btn-p{background:linear-gradient(135deg,var(--dorado),#f0d2a2);color:#061423;}
+.r-btn-p:hover{transform:translateY(-2px);}
+.r-btn-s{background:var(--glass);border:1px solid var(--glass-b);color:var(--tm-3);}
+/* FOOTER */
+.footer{padding:90px 8%;position:relative;z-index:2;background:linear-gradient(180deg,rgba(0,0,0,.18),rgba(0,0,0,.52));border-top:1px solid var(--glass-b);}
+.ft-cont{max-width:1440px;margin:auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:56px;}
+.ft-logo img{width:160px;margin-bottom:20px;}
+.ft-logo h3{font-family:'Playfair Display',serif;font-size:26px;color:var(--dorado2);margin-bottom:12px;}
+.ft-logo p{color:#4a6070;line-height:1.9;font-size:14px;}
+.ft-contact h4{font-family:'Playfair Display',serif;font-size:22px;color:var(--dorado2);margin-bottom:20px;}
+.ft-contact p{color:#4a6070;line-height:2.1;margin-bottom:12px;font-size:14px;}
+.map-btn{display:inline-block;margin-top:16px;text-decoration:none;padding:14px 28px;border-radius:50px;font-weight:700;font-size:13px;background:linear-gradient(135deg,var(--dorado),#f0d2a2);color:#061423;transition:.4s;box-shadow:0 7px 22px rgba(199,163,106,.28);}
+.map-btn:hover{transform:translateY(-3px) scale(1.03);}
+/* TRIAGE */
+.ft-triage h4{font-family:'Playfair Display',serif;font-size:22px;color:var(--cyan);margin-bottom:10px;}
+.ft-triage > p{font-size:13px;color:var(--tm-5);margin-bottom:18px;}
+.tr-options{display:flex;flex-direction:column;gap:9px;}
+.tr-btn{padding:12px 16px;border-radius:14px;border:1px solid rgba(99,196,255,.18);background:rgba(99,196,255,.05);color:var(--tm-2);cursor:pointer;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;text-align:left;transition:.3s;display:flex;align-items:center;gap:10px;}
+.tr-btn:hover{background:rgba(99,196,255,.13);border-color:rgba(99,196,255,.36);color:var(--cyan);transform:translateX(5px);}
+.tr-icon{font-size:18px;}
+#triage-result{margin-top:16px;padding:16px 20px;border-radius:14px;background:rgba(199,163,106,.07);border:1px solid rgba(199,163,106,.22);color:#c8aa70;font-size:13px;line-height:1.75;display:none;}
+.ft-bottom{max-width:1440px;margin:44px auto 0;border-top:1px solid var(--glass-b);padding-top:26px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;}
+.ft-bottom p{color:#243344;font-size:12px;}
+/* FAB */
+.ai-fab{position:fixed;bottom:30px;right:30px;z-index:9999;}
+.ai-fab-btn{width:60px;height:60px;border-radius:50%;border:none;cursor:pointer;background:linear-gradient(135deg,var(--dorado),#f0d2a2);box-shadow:0 8px 28px rgba(199,163,106,.48);display:flex;align-items:center;justify-content:center;font-size:24px;transition:.4s;animation:fpulse 3s infinite;}
+@keyframes fpulse{0%,100%{box-shadow:0 8px 28px rgba(199,163,106,.48);}50%{box-shadow:0 8px 46px rgba(199,163,106,.75),0 0 0 10px rgba(199,163,106,.07);}}
+.ai-fab-btn:hover{transform:scale(1.1) rotate(8deg);}
+.ai-panel{position:absolute;bottom:74px;right:0;width:336px;background:rgba(4,12,24,.97);border:1px solid rgba(199,163,106,.28);border-radius:22px;overflow:hidden;box-shadow:0 22px 56px rgba(0,0,0,.7);display:none;flex-direction:column;backdrop-filter:blur(22px);}
+.ai-panel.open{display:flex;animation:panIn .28s ease;}
+@keyframes panIn{from{opacity:0;transform:translateY(20px) scale(.94);}to{opacity:1;transform:translateY(0) scale(1);}}
+.ai-head{background:linear-gradient(135deg,rgba(199,163,106,.13),rgba(199,163,106,.04));border-bottom:1px solid rgba(199,163,106,.18);padding:16px 20px;display:flex;align-items:center;gap:11px;}
+.ai-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--dorado),#f0d2a2);display:flex;align-items:center;justify-content:center;font-size:17px;}
+.ai-head-txt h4{font-size:14px;color:var(--dorado2);font-weight:700;}
+.ai-head-txt p{font-size:11px;color:#3a5060;}
+.ai-msgs{flex:1;padding:18px 16px;display:flex;flex-direction:column;gap:11px;max-height:280px;overflow-y:auto;}
+.ai-msg{max-width:88%;font-size:12.5px;line-height:1.7;padding:11px 15px;border-radius:14px;}
+.ai-msg.bot{background:var(--wht-05);color:var(--tm-1b);align-self:flex-start;border-bottom-left-radius:3px;}
+.ai-msg.user{background:rgba(199,163,106,.16);color:var(--dorado2);align-self:flex-end;border-bottom-right-radius:3px;}
+.ai-qbtns{padding:6px 16px 16px;display:flex;flex-direction:column;gap:7px;}
+.ai-qbtn{padding:9px 13px;border-radius:11px;border:1px solid rgba(199,163,106,.2);background:rgba(199,163,106,.05);color:#a8bccc;cursor:pointer;font-size:12px;font-weight:600;text-align:left;transition:.28s;font-family:'Montserrat',sans-serif;}
+.ai-qbtn:hover{background:rgba(199,163,106,.14);color:var(--dorado2);border-color:rgba(199,163,106,.36);}
+.ai-in-row{padding:12px 16px;border-top:1px solid var(--glass-b);display:flex;gap:9px;}
+.ai-inp{flex:1;background:var(--glass);border:1px solid var(--glass-b);border-radius:11px;padding:9px 13px;color:white;font-family:'Montserrat',sans-serif;font-size:12.5px;outline:none;}
+.ai-inp::placeholder{color:#243344;}
+.ai-send{background:linear-gradient(135deg,var(--dorado),#f0d2a2);border:none;border-radius:11px;width:36px;height:36px;cursor:pointer;color:#061423;font-size:16px;transition:.3s;}
+.ai-send:hover{transform:scale(1.1);}
+/* RESPONSIVE */
+@media(max-width:1200px){.pr-grid{grid-template-columns:repeat(2,1fr);}.lab-grid{grid-template-columns:1fr 1fr;}.ft-cont{grid-template-columns:1fr 1fr;}}
+@media(max-width:900px){.hero-grid{grid-template-columns:1fr;}.hero h1{font-size:46px;}.about-grid{grid-template-columns:1fr;}.sim-banner{grid-template-columns:1fr;}.reader-tool{grid-template-columns:1fr;}.s-header h2{font-size:36px;}}
+@media(max-width:700px){.pr-grid,.lab-grid{grid-template-columns:1fr;}.ft-cont{grid-template-columns:1fr;}.hero h1{font-size:36px;}.nav-links a:not(.nav-cta){display:none;}}
+
+/* RESPONSIVE */
+@media(max-width:1200px){.pr-grid{grid-template-columns:repeat(2,1fr);}.lab-grid{grid-template-columns:1fr 1fr;}.ft-cont{grid-template-columns:1fr 1fr;}}
+@media(max-width:900px){.hero-grid{grid-template-columns:1fr;}.hero h1{font-size:46px;}.about-grid{grid-template-columns:1fr;}.sim-banner{grid-template-columns:1fr;}.reader-tool{grid-template-columns:1fr;}.s-header h2{font-size:36px;}.svc-result-grid{grid-template-columns:1fr!important;}.svc-cat-grid{grid-template-columns:repeat(2,1fr)!important;}}
+@media(max-width:700px){.pr-grid,.lab-grid{grid-template-columns:1fr;}.ft-cont{grid-template-columns:1fr;}.hero h1{font-size:36px;}.nav-links a:not(.nav-cta){display:none;}.svc-feed-grid{grid-template-columns:1fr!important;}}
+
+/* =============================================
+   SECCIÓN SERVICIOS + TRIAJE IA
+   ============================================= */
+.servicios{padding:110px 8%;position:relative;z-index:2;}
+.svc-cont{max-width:1440px;margin:auto;}
+
+.svc-wizard{background:linear-gradient(135deg,rgba(199,163,106,.07),rgba(4,14,28,.92));border:1px solid rgba(199,163,106,.24);border-radius:28px;padding:52px 56px;margin-bottom:56px;position:relative;overflow:hidden;}
+.svc-wizard::before{content:'';position:absolute;top:-80px;right:-80px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(199,163,106,.06),transparent 70%);}
+.svc-wiz-header{text-align:center;margin-bottom:40px;}
+.svc-wiz-header h3{font-family:'Playfair Display',serif;font-size:32px;color:white;margin-bottom:10px;}
+.svc-wiz-header h3 em{font-style:normal;color:var(--dorado2);}
+.svc-wiz-header p{color:var(--tm-3);font-size:15px;}
+
+.wiz-steps{display:flex;gap:8px;align-items:center;justify-content:center;margin-bottom:38px;}
+.wiz-step{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.8px;color:#2a4050;transition:.4s;}
+.wiz-step.active{color:var(--dorado2);}
+.wiz-step.done{color:var(--green);}
+.wiz-step-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;background:var(--wht-05);border:1px solid var(--wht-1);transition:.4s;}
+.wiz-step.active .wiz-step-num{background:rgba(199,163,106,.2);border-color:var(--dorado2);color:var(--dorado2);}
+.wiz-step.done .wiz-step-num{background:rgba(74,222,128,.15);border-color:var(--green);color:var(--green);}
+.wiz-sep{width:32px;height:1px;background:var(--wht-1);}
+
+.wiz-panel{display:none;}
+.wiz-panel.active{display:block;animation:wPanIn .4s ease;}
+@keyframes wPanIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+
+.svc-cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+@media(max-width:1000px){.svc-cat-grid{grid-template-columns:repeat(2,1fr);}}
+.svc-cat-btn{padding:22px 18px;border-radius:18px;border:1px solid var(--wht-08);background:var(--wht-03);color:var(--tm-2);cursor:pointer;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;text-align:center;transition:.35s;display:flex;flex-direction:column;align-items:center;gap:10px;line-height:1.4;}
+.svc-cat-btn:hover,.svc-cat-btn.selected{background:rgba(199,163,106,.12);border-color:rgba(199,163,106,.38);color:var(--dorado2);transform:translateY(-4px);box-shadow:0 12px 30px rgba(0,0,0,.22);}
+.svc-cat-btn.new-area:hover,.svc-cat-btn.new-area.selected{background:rgba(99,196,255,.1);border-color:rgba(99,196,255,.36);color:var(--cyan);}
+.svc-cat-icon{font-size:30px;}
+
+.svc-sub-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+@media(max-width:700px){.svc-sub-grid{grid-template-columns:1fr 1fr;}}
+.svc-sub-btn{padding:14px 16px;border-radius:14px;border:1px solid var(--wht-08);background:var(--wht-03);color:var(--tm-2);cursor:pointer;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:600;text-align:left;transition:.3s;display:flex;align-items:center;gap:10px;}
+.svc-sub-btn:hover{background:rgba(199,163,106,.1);border-color:rgba(199,163,106,.3);color:var(--dorado2);transform:translateX(4px);}
+
+.svc-result{background:rgba(3,10,22,.7);border:1px solid rgba(199,163,106,.2);border-radius:22px;padding:38px 42px;}
+.svc-result-grid{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:start;}
+.svc-result-left h3{font-family:'Playfair Display',serif;font-size:26px;color:var(--dorado2);margin-bottom:12px;}
+.svc-result-left p{color:var(--tm-2);font-size:14px;line-height:1.85;margin-bottom:16px;}
+.svc-result-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;}
+.svc-tag{display:inline-block;padding:6px 14px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.5px;background:rgba(199,163,106,.1);border:1px solid rgba(199,163,106,.25);color:var(--dorado2);}
+.svc-tag.new{background:rgba(99,196,255,.09);border-color:rgba(99,196,255,.25);color:var(--cyan);}
+.svc-cta-wrap{display:flex;flex-direction:column;gap:10px;margin-top:8px;}
+.svc-cta-primary{display:inline-block;text-decoration:none;padding:14px 28px;border-radius:50px;font-weight:800;font-size:13px;letter-spacing:.5px;background:linear-gradient(135deg,var(--dorado),#f0d2a2);color:#061423;transition:.4s;text-align:center;box-shadow:0 8px 24px rgba(199,163,106,.32);}
+.svc-cta-primary:hover{transform:translateY(-4px) scale(1.03);}
+.svc-cta-secondary{display:inline-block;text-decoration:none;padding:13px 28px;border-radius:50px;font-weight:700;font-size:13px;border:1px solid var(--wht-14);background:var(--wht-04);color:var(--tm-1b);transition:.4s;text-align:center;}
+.svc-cta-secondary:hover{border-color:var(--dorado2);color:var(--dorado2);}
+
+.svc-template{background:var(--wht-03);border:1px solid var(--wht-08);border-radius:18px;padding:28px 26px;}
+.svc-template h4{font-family:'Playfair Display',serif;font-size:17px;color:white;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.svc-tpl-item{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid var(--wht-05);}
+.svc-tpl-item:last-child{border-bottom:none;padding-bottom:0;}
+.svc-tpl-icon{width:30px;height:30px;border-radius:8px;background:rgba(199,163,106,.1);border:1px solid rgba(199,163,106,.2);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;margin-top:1px;}
+.svc-tpl-txt strong{display:block;font-size:12.5px;color:var(--dorado3);font-weight:700;margin-bottom:3px;}
+.svc-tpl-txt span{font-size:11.5px;color:#4a6a7a;line-height:1.6;}
+
+.wiz-nav{display:flex;justify-content:space-between;align-items:center;margin-top:32px;}
+.wiz-back{background:none;border:1px solid var(--wht-1);color:var(--tm-4);padding:10px 22px;border-radius:50px;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;transition:.3s;}
+.wiz-back:hover{border-color:var(--wht-25);color:var(--tm-2);}
+.wiz-reset{background:none;border:none;color:var(--dorado);cursor:pointer;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;letter-spacing:.5px;transition:.3s;padding:10px 0;}
+.wiz-reset:hover{color:var(--dorado2);}
+
+.ai-badge-inline{display:inline-flex;align-items:center;gap:7px;padding:5px 13px;border-radius:20px;background:rgba(99,196,255,.07);border:1px solid rgba(99,196,255,.2);color:var(--cyan);font-size:10px;font-weight:700;letter-spacing:1px;margin-bottom:18px;}
+.ai-pulse{width:6px;height:6px;border-radius:50%;background:var(--cyan);animation:pdot 1.5s infinite;}
+
+.svc-feed{margin-top:56px;}
+.svc-feed-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:16px;}
+.svc-feed-header h3{font-family:'Playfair Display',serif;font-size:26px;color:white;}
+.svc-feed-header h3 span{color:var(--dorado2);}
+.svc-feed-tabs{display:flex;gap:8px;flex-wrap:wrap;}
+.feed-tab{padding:8px 18px;border-radius:30px;border:1px solid var(--wht-1);background:var(--wht-03);color:var(--tm-4);cursor:pointer;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:.5px;transition:.3s;}
+.feed-tab.active,.feed-tab:hover{background:rgba(199,163,106,.12);border-color:rgba(199,163,106,.32);color:var(--dorado2);}
+.svc-feed-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+@media(max-width:900px){.svc-feed-grid{grid-template-columns:1fr 1fr;}}
+.svc-feed-card{background:var(--glass);border:1px solid var(--glass-b);border-radius:20px;padding:26px 24px;backdrop-filter:blur(12px);transition:.45s;cursor:pointer;position:relative;overflow:hidden;}
+.svc-feed-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(199,163,106,.04),transparent);opacity:0;transition:.4s;}
+.svc-feed-card:hover{transform:translateY(-8px);border-color:rgba(199,163,106,.3);box-shadow:0 18px 44px rgba(0,0,0,.3);}
+.svc-feed-card:hover::after{opacity:1;}
+.sfc-icon{font-size:26px;margin-bottom:12px;}
+.sfc-area{font-size:9px;font-weight:800;letter-spacing:2px;color:var(--dorado);margin-bottom:8px;}
+.sfc-area.new{color:var(--cyan);}
+.sfc-title{font-size:15px;font-weight:700;color:var(--dorado3);margin-bottom:8px;}
+.sfc-desc{font-size:12px;color:var(--tm-4);line-height:1.75;margin-bottom:14px;}
+.sfc-tags{display:flex;flex-wrap:wrap;gap:6px;}
+.sfc-tag{font-size:10px;color:var(--tm-5);background:var(--wht-04);border:1px solid var(--wht-07);border-radius:10px;padding:3px 9px;}
+.svc-feed-card.new-card{border-color:rgba(99,196,255,.14);background:linear-gradient(135deg,rgba(8,20,44,.8),rgba(3,10,22,.9));}
+.svc-feed-card.new-card .sfc-title{color:#a8d8f0;}
+.svc-feed-card.new-card:hover{border-color:rgba(99,196,255,.34);box-shadow:0 18px 44px rgba(99,196,255,.06),0 6px 20px rgba(0,0,0,.3);}
+.svc-feed-empty{grid-column:1/-1;text-align:center;padding:56px 0;color:#2a4050;font-size:14px;}
+.svc-feed-empty span{display:block;font-size:38px;margin-bottom:14px;}
+
+/* =============================================
+   REDES SOCIALES
+   ============================================= */
+.social-bar{
+  padding:56px 8% 28px;
+  position:relative;
+  z-index:2;
+  border-top:1px solid rgba(199,163,106,.12);
+}
+.social-bar-inner{
+  max-width:1440px;
+  margin:auto;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:32px;
+}
+.social-bar-title{
+  text-align:center;
+}
+.social-bar-title p{
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:4px;
+  color:rgba(199,163,106,.5);
+  margin-bottom:8px;
+}
+.social-bar-title h3{
+  font-family:'Playfair Display',serif;
+  font-size:28px;
+  color:white;
+}
+.social-bar-title h3 span{color:var(--dorado2);}
+
+.social-grid{
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+
+.soc-link{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+  text-decoration:none;
+  padding:20px 22px 16px;
+  border-radius:22px;
+  border:1px solid rgba(199,163,106,.14);
+  background:var(--wht-025);
+  backdrop-filter:blur(10px);
+  transition:.4s cubic-bezier(.23,1,.32,1);
+  min-width:90px;
+  overflow:hidden;
+}
+.soc-link::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg,rgba(199,163,106,.08),transparent 60%);
+  opacity:0;
+  transition:.4s;
+}
+.soc-link:hover{
+  transform:translateY(-8px) scale(1.04);
+  border-color:rgba(199,163,106,.45);
+  box-shadow:
+    0 0 0 1px rgba(199,163,106,.2),
+    0 16px 40px rgba(0,0,0,.35),
+    0 0 30px rgba(199,163,106,.12);
+}
+.soc-link:hover::before{opacity:1;}
+
+.soc-icon{
+  width:46px;
+  height:46px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:14px;
+  position:relative;
+  z-index:1;
+  transition:.4s;
+}
+.soc-link:hover .soc-icon{
+  filter:drop-shadow(0 0 14px rgba(199,163,106,.7));
+  transform:scale(1.1);
+}
+.soc-icon svg{
+  width:26px;
+  height:26px;
+  fill:var(--dorado2);
+  transition:.4s;
+}
+.soc-link:hover .soc-icon svg{fill:#f5ddb5;}
+.soc-label{
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.8px;
+  color:rgba(199,163,106,.55);
+  z-index:1;
+  position:relative;
+  transition:.3s;
+}
+.soc-link:hover .soc-label{color:var(--dorado2);}
+
+/* Glow ring animado al hacer hover */
+.soc-link::after{
+  content:'';
+  position:absolute;
+  inset:-1px;
+  border-radius:22px;
+  background:linear-gradient(135deg,rgba(199,163,106,.4),rgba(199,163,106,0) 60%);
+  opacity:0;
+  transition:.4s;
+  pointer-events:none;
+}
+.soc-link:hover::after{opacity:1;}
+
+/* WhatsApp — verde especial */
+.soc-link.wa:hover{
+  border-color:rgba(74,222,128,.4);
+  box-shadow:0 16px 40px rgba(0,0,0,.35),0 0 30px rgba(74,222,128,.1);
+}
+.soc-link.wa:hover .soc-icon svg{fill:#4ade80;}
+.soc-link.wa:hover .soc-label{color:#4ade80;}
+.soc-link.wa::after{background:linear-gradient(135deg,rgba(74,222,128,.3),transparent 60%);}
+
+/* Footer social strip */
+.ft-social{
+  display:flex;
+  gap:10px;
+  margin-top:20px;
+  flex-wrap:wrap;
+}
+.ft-soc{
+  width:36px;height:36px;
+  border-radius:10px;
+  border:1px solid rgba(199,163,106,.2);
+  background:rgba(199,163,106,.05);
+  display:flex;align-items:center;justify-content:center;
+  transition:.35s;
+  text-decoration:none;
+}
+.ft-soc svg{width:16px;height:16px;fill:rgba(199,163,106,.5);transition:.35s;}
+.ft-soc:hover{border-color:rgba(199,163,106,.5);background:rgba(199,163,106,.12);transform:translateY(-3px);}
+.ft-soc:hover svg{fill:var(--dorado2);}
+.ft-soc.wa:hover{border-color:rgba(74,222,128,.4);background:rgba(74,222,128,.07);}
+.ft-soc.wa:hover svg{fill:#4ade80;}
+
+/* =============================================
+   SPLASH SCREEN
+   ============================================= */
+#splash{
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  width:100vw;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:
+    radial-gradient(ellipse at 20% 30%,#0d3558 0%,transparent 45%),
+    radial-gradient(ellipse at 80% 75%,#6b4515 0%,transparent 40%),
+    linear-gradient(150deg,#030c18 0%,#071a2e 55%,#030c18 100%);
+  overflow:hidden;
+  transition:opacity .9s ease, transform .9s ease;
+}
+#splash.splash-exit{
+  opacity:0;
+  transform:scale(1.04);
+  pointer-events:none;
+}
+
+/* LUZ GIRATORIA DE FONDO */
+#splash::before{
+  content:'';
+  position:absolute;
+  width:900px;
+  height:900px;
+  background:radial-gradient(circle,rgba(199,163,106,.12) 0%,transparent 65%);
+  animation:splashRotate 22s linear infinite;
+  pointer-events:none;
+}
+@keyframes splashRotate{
+  from{transform:rotate(0deg) scale(1);}
+  to{transform:rotate(360deg) scale(1);}
+}
+
+/* GRID INTERACTIVO */
+.splash-grid{
+  position:absolute;
+  inset:0;
+  display:grid;
+  grid-template-columns:repeat(16,1fr);
+  grid-template-rows:repeat(10,1fr);
+  z-index:1;
+}
+.splash-tile{
+  position:relative;
+  overflow:hidden;
+  cursor:crosshair;
+}
+.splash-tile::before{
+  content:'';
+  position:absolute;
+  width:3px;
+  height:3px;
+  background:rgba(199,163,106,.5);
+  border-radius:50%;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  transition:.5s;
+  box-shadow:0 0 8px rgba(199,163,106,.3);
+}
+.splash-tile:hover::before{
+  width:48px;height:48px;
+  opacity:1;
+  background:rgba(199,163,106,.18);
+  box-shadow:0 0 30px rgba(199,163,106,.35);
+  transition:.12s;
+}
+
+/* LÍNEAS ANIMADAS */
+.splash-lines{
+  position:absolute;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+}
+.splash-lines span{
+  position:absolute;
+  display:block;
+  width:1px;
+  height:180px;
+  background:linear-gradient(transparent,rgba(199,163,106,.55),transparent);
+  animation:splashLine 6s linear infinite;
+  opacity:.5;
+}
+.splash-lines span:nth-child(1){left:12%;animation-delay:0s;animation-duration:7s;}
+.splash-lines span:nth-child(2){left:38%;animation-delay:2.2s;animation-duration:5.5s;}
+.splash-lines span:nth-child(3){left:62%;animation-delay:1s;animation-duration:8s;}
+.splash-lines span:nth-child(4){left:85%;animation-delay:3.5s;animation-duration:6s;}
+
+@keyframes splashLine{
+  0%{transform:translateY(-220px);}
+  100%{transform:translateY(110vh);}
+}
+
+/* CONTENIDO CENTRAL */
+.splash-center{
+  position:relative;
+  z-index:10;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  padding:0 24px;
+}
+
+/* AURA DEL LOGO */
+.splash-logo-wrap{
+  position:relative;
+  margin-bottom:36px;
+}
+.splash-logo-wrap::before{
+  content:'';
+  position:absolute;
+  width:220px;height:220px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(199,163,106,.15) 0%,transparent 70%);
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  animation:splashAura 3s ease-in-out infinite alternate;
+}
+@keyframes splashAura{
+  from{transform:translate(-50%,-50%) scale(.85);opacity:.5;}
+  to{transform:translate(-50%,-50%) scale(1.15);opacity:1;}
+}
+.splash-logo{
+  width:150px;
+  position:relative;
+  z-index:1;
+  filter:drop-shadow(0 0 22px rgba(199,163,106,.7));
+  animation:splashFloat 5s ease-in-out infinite;
+}
+@keyframes splashFloat{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-14px);}
+}
+
+/* LÍNEA DECORATIVA */
+.splash-divider{
+  width:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(199,163,106,.7),transparent);
+  margin:0 auto 28px;
+  animation:splashDivider 1.6s ease forwards;
+  animation-delay:.6s;
+}
+@keyframes splashDivider{
+  to{width:220px;}
+}
+
+/* TEXTOS */
+.splash-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(26px,5vw,48px);
+  font-weight:900;
+  color:#ffffff;
+  letter-spacing:3px;
+  line-height:1.1;
+  opacity:0;
+  transform:translateY(22px);
+  animation:splashFade 1.2s ease forwards;
+  animation-delay:.8s;
+}
+.splash-title span{color:var(--dorado2);}
+
+.splash-sub{
+  margin-top:12px;
+  color:#c7a36a;
+  font-size:clamp(10px,1.5vw,13px);
+  letter-spacing:5px;
+  font-weight:600;
+  opacity:0;
+  transform:translateY(16px);
+  animation:splashFade 1.2s ease forwards;
+  animation-delay:1.2s;
+}
+
+@keyframes splashFade{
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* BOTÓN ENTRAR */
+.splash-btn{
+  margin-top:42px;
+  display:inline-block;
+  text-decoration:none;
+  padding:16px 52px;
+  border-radius:50px;
+  font-family:'Montserrat',sans-serif;
+  font-weight:800;
+  font-size:13px;
+  letter-spacing:3px;
+  color:#061423;
+  background:linear-gradient(135deg,#b38b59 0%,#d9b27c 50%,#e8c992 100%);
+  box-shadow:
+    0 0 0 1px rgba(199,163,106,.3),
+    0 8px 32px rgba(179,139,89,.45),
+    0 2px 8px rgba(0,0,0,.3);
+  position:relative;
+  overflow:hidden;
+  opacity:0;
+  transform:translateY(18px);
+  animation:splashFade 1.2s ease forwards;
+  animation-delay:1.8s;
+  transition:transform .35s ease, box-shadow .35s ease;
+  cursor:pointer;
+}
+.splash-btn::before{
+  content:'';
+  position:absolute;
+  top:-50%;left:-60%;
+  width:50%;height:200%;
+  background:var(--wht-22);
+  transform:skewX(-22deg);
+  transition:.55s ease;
+}
+.splash-btn:hover::before{
+  left:130%;
+}
+.splash-btn:hover{
+  transform:translateY(-5px) scale(1.04);
+  box-shadow:
+    0 0 0 1px rgba(199,163,106,.5),
+    0 16px 44px rgba(199,163,106,.55),
+    0 4px 12px rgba(0,0,0,.3);
+}
+
+/* PUNTOS DE BRILLO DECORATIVOS */
+.splash-particles{
+  position:absolute;
+  inset:0;
+  z-index:3;
+  pointer-events:none;
+}
+.sp-dot{
+  position:absolute;
+  width:3px;height:3px;
+  border-radius:50%;
+  background:rgba(199,163,106,.6);
+  animation:spFloat linear infinite;
+}
+@keyframes spFloat{
+  0%{transform:translateY(0) scale(1);opacity:.7;}
+  50%{opacity:.3;transform:translateY(-60px) scale(.5);}
+  100%{transform:translateY(-130px) scale(0);opacity:0;}
+}
+/* ============================
+   SECCIÓN CVU / AVAL ACADÉMICO
+   ============================ */
+.cvu-section{padding:110px 8%;position:relative;z-index:2;}
+.cvu-cont{max-width:1440px;margin:auto;}
+.cvu-intro{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:start;margin-bottom:52px;}
+.cvu-intro-text h3{font-family:'Playfair Display',serif;font-size:36px;color:var(--dorado2);margin-bottom:16px;line-height:1.2;}
+.cvu-intro-text p{color:var(--tm-2);font-size:15px;line-height:1.9;margin-bottom:14px;}
+.cvu-badge-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.cvu-badge{background:var(--glass);border:1px solid var(--glass-b);border-radius:18px;padding:22px 20px;backdrop-filter:blur(12px);text-align:center;transition:.4s;}
+.cvu-badge:hover{border-color:rgba(199,163,106,.4);transform:translateY(-6px);}
+.cvu-badge .num{font-family:'Playfair Display',serif;font-size:38px;font-weight:900;color:var(--dorado2);line-height:1;}
+.cvu-badge .lbl{font-size:11px;letter-spacing:1.2px;color:var(--tm-4);margin-top:6px;font-weight:600;}
+.cvu-table-wrap{margin-bottom:34px;}
+.cvu-table-title{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.cvu-table-title .icon{font-size:22px;}
+.cvu-table-title h4{font-family:'Playfair Display',serif;font-size:22px;color:var(--dorado2);}
+.cvu-table-title .cnt{font-size:11px;letter-spacing:1px;color:var(--tm-5);background:var(--wht-04);border:1px solid var(--glass-b);padding:4px 10px;border-radius:20px;font-weight:700;}
+.cvu-table{width:100%;border-collapse:collapse;font-size:13px;}
+.cvu-table thead tr{background:rgba(26,43,74,.85);}
+.cvu-table thead th{padding:12px 14px;text-align:left;color:var(--dorado2);font-weight:700;letter-spacing:.6px;font-size:11px;border-bottom:1px solid rgba(199,163,106,.2);}
+.cvu-table tbody tr{border-bottom:1px solid var(--wht-04);transition:.25s;}
+.cvu-table tbody tr:hover{background:rgba(199,163,106,.04);}
+.cvu-table tbody tr:nth-child(even){background:var(--wht-02);}
+.cvu-table tbody tr:nth-child(even):hover{background:rgba(199,163,106,.05);}
+.cvu-table td{padding:10px 14px;color:var(--tm-2);line-height:1.5;vertical-align:top;}
+.cvu-table td:first-child{color:var(--tm-hi);font-weight:500;}
+.cvu-pill{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.8px;padding:3px 9px;border-radius:20px;white-space:nowrap;}
+.cvu-pill.ponente{background:rgba(99,196,255,.12);color:var(--cyan);border:1px solid rgba(99,196,255,.22);}
+.cvu-pill.instructor{background:rgba(199,163,106,.15);color:var(--dorado2);border:1px solid rgba(199,163,106,.28);}
+.cvu-pill.alumno{background:rgba(74,222,128,.1);color:#4ade80;border:1px solid rgba(74,222,128,.2);}
+.cvu-pill.coord{background:rgba(180,100,255,.12);color:#c084fc;border:1px solid rgba(180,100,255,.2);}
+.aval-banner{background:linear-gradient(135deg,rgba(199,163,106,.1),rgba(199,163,106,.03));border:1px solid rgba(199,163,106,.32);border-radius:24px;padding:46px 52px;display:grid;grid-template-columns:1fr auto;gap:42px;align-items:center;margin-top:44px;}
+.aval-content h3{font-family:'Playfair Display',serif;font-size:28px;color:var(--dorado2);margin-bottom:12px;}
+.aval-content p{color:var(--tm-2);font-size:14px;line-height:1.85;max-width:600px;}
+.aval-seal{text-align:center;min-width:200px;background:rgba(199,163,106,.06);border:1px solid rgba(199,163,106,.2);border-radius:18px;padding:28px 24px;}
+.aval-seal .seal-icon{font-size:48px;margin-bottom:10px;}
+.aval-seal p{font-size:12px;color:var(--dorado2);font-weight:700;letter-spacing:1px;margin-bottom:4px;}
+.aval-seal small{font-size:11px;color:var(--tm-5);}
+.aval-btns{display:flex;gap:14px;margin-top:22px;flex-wrap:wrap;}
+.aval-btn-p{display:inline-block;text-decoration:none;padding:13px 28px;border-radius:50px;font-weight:700;font-size:13px;background:linear-gradient(135deg,var(--dorado),#f0d2a2);color:#061423;transition:.4s;box-shadow:0 8px 22px rgba(199,163,106,.3);}
+.aval-btn-p:hover{transform:translateY(-4px) scale(1.03);}
+.aval-btn-s{display:inline-block;text-decoration:none;padding:13px 28px;border-radius:50px;font-weight:700;font-size:13px;border:1px solid rgba(199,163,106,.3);color:var(--dorado2);transition:.4s;background:rgba(199,163,106,.04);}
+.aval-btn-s:hover{background:rgba(199,163,106,.1);}
+.cvu-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px;}
+.cvu-tab{padding:9px 20px;border-radius:30px;border:1px solid var(--wht-1);background:var(--wht-03);color:var(--tm-4);cursor:pointer;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;letter-spacing:.5px;transition:.3s;}
+.cvu-tab:hover,.cvu-tab.active{background:rgba(199,163,106,.12);border-color:rgba(199,163,106,.32);color:var(--dorado2);}
+.cvu-panel{display:none;}.cvu-panel.active{display:block;}
+@media(max-width:900px){.cvu-intro{grid-template-columns:1fr;}.cvu-badge-grid{grid-template-columns:1fr 1fr;}.aval-banner{grid-template-columns:1fr;}.aval-seal{display:none;}}
+
+/* ============================
+   ACADEMIA PROFESIONAL EAG (CURSOS)
+   ============================ */
+.academia{padding:110px 8%;position:relative;z-index:2;}
+.academia-cont{max-width:1440px;margin:auto;}
+.grid-cursos{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:26px;}
+.card-curso{background:var(--glass);border:1px solid var(--glass-b);border-radius:26px;padding:38px 34px;backdrop-filter:blur(12px);transition:.5s;box-shadow:0 8px 35px rgba(0,0,0,.2);display:flex;flex-direction:column;justify-content:space-between;}
+.card-curso:hover{transform:translateY(-10px);box-shadow:0 20px 50px rgba(0,0,0,.32);}
+.card-curso-head{margin-bottom:24px;}
+.card-curso-head h3{font-family:'Playfair Display',serif;font-size:26px;margin-bottom:6px;}
+.card-curso-head p{font-weight:700;text-transform:uppercase;font-size:11.5px;letter-spacing:.5px;}
+.step-item{display:flex;gap:14px;margin-bottom:16px;}
+.step-num{min-width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;color:#061423;flex-shrink:0;}
+.step-item p{font-size:13px;color:var(--tm-2);line-height:1.7;}
+.step-item p strong{color:#d8e4ee;}
+.btn-reserva{display:block;text-align:center;padding:16px;border-radius:15px;text-decoration:none;font-weight:900;transition:.4s;margin-top:26px;font-size:12.5px;letter-spacing:.3px;}
+.btn-reserva:hover{transform:translateY(-3px);}
+
+/* ============================
+   AVISO DE PRIVACIDAD
+   ============================ */
+.privacidad-section{padding:110px 8%;position:relative;z-index:2;}
+.privacidad-container{max-width:1200px;margin:auto;background:var(--glass);border:1px solid var(--glass-b);border-radius:26px;padding:50px;backdrop-filter:blur(12px);box-shadow:0 8px 35px rgba(0,0,0,.2);}
+.privacidad-container>p:first-of-type{color:var(--tm-1b);line-height:1.9;font-size:14.5px;margin-bottom:6px;}
+.privacidad-container h4{font-size:16px;color:var(--dorado2);margin-top:28px;margin-bottom:10px;font-family:'Playfair Display',serif;letter-spacing:.3px;}
+.privacidad-container p, .privacidad-container ul{font-size:13.5px;color:var(--tm-2);line-height:1.85;margin-bottom:12px;}
+.privacidad-container ul{padding-left:20px;}
+.privacidad-container ul li{margin-bottom:6px;}
+.privacidad-contact{margin-top:30px;padding:22px 26px;border-radius:16px;background:rgba(199,163,106,.06);border:1px solid rgba(199,163,106,.2);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;}
+.privacidad-contact p{margin:0;color:var(--tm-2);font-size:13.5px;}
+@media(max-width:900px){.privacidad-container{padding:30px;}.card-curso{padding:30px 26px;}}
+
+/* ============================
+   BOTÓN "VER CV COMPLETO" (abre modal)
+   ============================ */
+.cvu-modal-btn{margin-top:24px;display:inline-flex;align-items:center;gap:10px;padding:13px 28px;border-radius:50px;font-weight:800;font-size:13px;letter-spacing:.3px;cursor:pointer;border:1px solid rgba(199,163,106,.35);background:rgba(199,163,106,.08);color:var(--dorado2);transition:.35s;font-family:'Montserrat',sans-serif;}
+.cvu-modal-btn:hover{background:rgba(199,163,106,.16);transform:translateY(-3px);box-shadow:0 10px 26px rgba(199,163,106,.2);}
+
+/* ============================
+   SISTEMA GENÉRICO DE MODALES
+   ============================ */
+.modal-overlay{position:fixed;inset:0;z-index:2000;background:rgba(2,8,16,.72);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:24px;opacity:0;transition:opacity .3s ease;}
+.modal-overlay.open{display:flex;opacity:1;}
+.modal-box{width:100%;max-width:820px;max-height:86vh;overflow-y:auto;background:linear-gradient(160deg,var(--bg-g2) 0%,var(--bg-g1) 100%);border:1px solid var(--glass-b);border-radius:26px;padding:44px;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.5);transform:translateY(24px) scale(.97);transition:transform .35s cubic-bezier(.2,.8,.2,1);}
+.modal-overlay.open .modal-box{transform:translateY(0) scale(1);}
+.modal-close{position:absolute;top:18px;right:18px;width:38px;height:38px;border-radius:50%;border:1px solid var(--glass-b);background:var(--wht-05);color:var(--text-color);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.3s;}
+.modal-close:hover{background:rgba(199,163,106,.18);border-color:rgba(199,163,106,.4);color:var(--dorado2);}
+.modal-head{margin-bottom:22px;padding-right:40px;}
+.modal-head h3{font-family:'Playfair Display',serif;font-size:28px;color:var(--dorado2);margin-bottom:6px;}
+.modal-head p{color:var(--tm-2);font-size:13.5px;}
+.modal-cv-body{font-size:13.5px;color:var(--tm-2);line-height:1.9;white-space:pre-line;background:var(--glass);border:1px solid var(--glass-b);border-radius:16px;padding:22px 24px;max-height:38vh;overflow-y:auto;}
+.modal-actions{display:flex;gap:14px;margin-top:22px;flex-wrap:wrap;}
+.modal-btn{border:none;cursor:pointer;text-decoration:none;padding:13px 26px;border-radius:50px;font-weight:800;font-size:12.5px;letter-spacing:.3px;font-family:'Montserrat',sans-serif;transition:.35s;}
+.modal-btn-p{background:linear-gradient(135deg,var(--dorado),#f0d2a2);color:#061423;}
+.modal-btn-p:hover{transform:translateY(-3px);}
+.modal-btn-s{background:var(--wht-05);border:1px solid var(--glass-b);color:var(--text-color);}
+.modal-btn-s:hover{border-color:rgba(199,163,106,.4);color:var(--dorado2);}
+.modal-copy-toast{margin-top:12px;font-size:12px;color:var(--green);font-weight:700;opacity:0;transition:.3s;}
+.modal-copy-toast.show{opacity:1;}
+body.modal-locked{overflow:hidden;}
+@media(max-width:640px){.modal-box{padding:30px 24px;}}
+</style>
+</head>
+<body>
+
+<!-- =============================================
+     SPLASH SCREEN
+     ============================================= -->
+<div id="splash">
+  <div class="splash-grid" id="splash-grid"></div>
+  <div class="splash-lines">
+    <span></span><span></span><span></span><span></span>
+  </div>
+  <div class="splash-particles" id="splash-particles"></div>
+  <div class="splash-center">
+    <div class="splash-logo-wrap">
+      <img class="splash-logo"
+        src="https://i.ibb.co/zC9JJNB/EAG-0004.png"
+        alt="EAG Soluciones Legales">
+    </div>
+    <div class="splash-divider"></div>
+    <div class="splash-title">EAG <span>Soluciones Legales</span></div>
+    <div class="splash-sub">JUSTICIA &nbsp;·&nbsp; EXPERIENCIA &nbsp;·&nbsp; CONFIANZA</div>
+    <a href="#" class="splash-btn" id="splash-enter" onclick="enterSite(event)">ENTRAR</a>
+  </div>
+</div>
+
+<canvas id="neural-canvas"></canvas>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-container">
+    <img src="https://i.ibb.co/zC9JJNB/EAG-0004.png" alt="EAG" class="logo-img">
+    <div class="nav-links">
+      <a href="#inicio">Inicio</a>
+      <a href="#nosotros">Nosotros</a>
+      <a href="#areas">Áreas</a>
+      <a href="#servicios">Servicios</a>
+      <a href="#laboratorio">LegalTech Lab</a>
+      <a href="#academia">Academia</a>
+      <a href="#cvu">CVU &amp; Aval</a>
+      <a href="#privacidad">Privacidad</a>
+      <a href="#contacto">Contacto</a>
+      <button type="button" class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" aria-label="Cambiar tema claro/oscuro" title="Cambiar tema claro/oscuro">
+        <span class="theme-icon sun">☀️</span>
+        <span class="theme-icon moon">🌙</span>
+      </button>
+      <a href="tel:5574124380" class="nav-cta">📞 Consulta Gratuita</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="inicio">
+  <div class="hero-grid">
+    <div class="hero-text">
+      <div class="badge-dyn">
+        <div class="live-dot"></div>
+        <div class="ctr-wrap"><span class="ctr-num" id="ctr-cases">0</span><span class="ctr-lbl">CASOS RESUELTOS</span></div>
+        <span class="sep">·</span>
+        <div class="ctr-wrap"><span class="ctr-num" id="ctr-students">0</span><span class="ctr-lbl">ALUMNOS FORMADOS</span></div>
+      </div>
+      <h1>EAG <span>Soluciones Legales</span></h1>
+      <div class="hero-line"></div>
+      <div class="hero-sub">Innovación Jurídica · Inteligencia Artificial · Litigio Estratégico</div>
+      <p>Defensa estratégica, innovación jurídica y formación especializada en derecho, inteligencia artificial y litigio moderno. El despacho líder en LegalTech preparado para la nueva era legal digital de México.</p>
+      <div class="hero-btns">
+        <a href="#contacto" class="btn btn-p">Asesoría Gratuita</a>
+        <a href="#laboratorio" class="btn btn-s">Explorar LegalTech Lab →</a>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="main-card">
+        <div class="card-image">
+          <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?q=80&w=1200&auto=format&fit=crop" alt="Despacho EAG">
+        </div>
+        <div class="card-title">EAG <span>LegalTech</span></div>
+        <p class="card-desc">Especialistas en litigio, derecho corporativo, propiedad intelectual e inteligencia artificial aplicada al derecho.</p>
+        <div class="card-info">
+          <div class="info-box"><h4>TRAYECTORIA</h4><p>Más de 10 años de soluciones jurídicas sólidas.</p></div>
+          <div class="info-box"><h4>INNOVACIÓN</h4><p>IA integrada en cada área de práctica.</p></div>
+          <div class="info-box"><h4>ESPECIALIDAD</h4><p>Penal, civil, corporativo, PI e IA.</p></div>
+          <div class="info-box"><h4>LABORATORIO</h4><p>Simuladores de audiencia y micro-learning.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NOSOTROS -->
+<section class="about" id="nosotros">
+  <div class="about-cont">
+    <div class="s-header">
+      <div class="s-badge">FIRMA LEGAL · CONFIANZA · EXPERIENCIA</div>
+      <h2>Nuestra <span>Esencia Jurídica</span></h2>
+      <div class="s-line"></div>
+    </div>
+    <div class="about-grid">
+      <div class="about-card">
+        <div class="icon-c">⚖️</div>
+        <h3>Misión</h3>
+        <p>Brindar el mejor servicio legal con confianza, seguridad y tranquilidad, estableciendo una defensa adecuada potenciada con tecnología de vanguardia e inteligencia artificial.</p>
+      </div>
+      <div class="about-card">
+        <div class="icon-c">🏛️</div>
+        <h3>Visión</h3>
+        <p>Ser la firma legal de referencia en México que integra inteligencia artificial y litigio estratégico, con los más altos parámetros de responsabilidad, efectividad y fiabilidad en la era digital.</p>
+      </div>
+      <div class="about-card">
+        <div class="icon-c">✨</div>
+        <h3>Valores</h3>
+        <ul class="vals">
+          <li>Orientación y seguridad jurídica</li>
+          <li>Excelencia social y humana</li>
+          <li>Innovación y creatividad tecnológica</li>
+          <li>Honestidad y transparencia</li>
+          <li>Ética profesional</li>
+        </ul>
+      </div>
+    </div>
+    <div class="svc-banner">
+      <div class="svc-content">
+        <h3>Asesoría Telefónica Gratuita</h3>
+        <p>Tarifas económicas · Facilidades de pago · Atención en oficinas o visita a domicilio.</p>
+      </div>
+      <a href="tel:55 74 12 43 80" class="call-btn">TEL. 55 74 12 43 80</a>
+    </div>
+  </div>
+</section>
+
+<!-- ÁREAS DE EJERCICIO -->
+<section class="practice-areas" id="areas">
+  <div class="pr-cont">
+    <div class="s-header">
+      <div class="s-badge">ESPECIALIDADES JURÍDICAS · 2026</div>
+      <h2>Áreas de <span>Ejercicio Profesional</span></h2>
+      <div class="s-line"></div>
+    </div>
+    <div class="pr-grid">
+      <div class="pr-card">
+        <div class="pr-icon">⚖️</div>
+        <h3>Derecho Penal</h3>
+        <ul>
+          <li>Juicios Orales</li>
+          <li>Procedimiento abreviado</li>
+          <li>Violencia familiar</li>
+          <li>Acuerdos reparatorios</li>
+          <li>Denuncias y declaraciones</li>
+        </ul>
+      </div>
+      <div class="pr-card">
+        <div class="pr-icon">👨‍👩‍👧</div>
+        <h3>Derecho Familiar</h3>
+        <ul>
+          <li>Divorcios</li>
+          <li>Pensión alimenticia</li>
+          <li>Guardia y Custodia</li>
+          <li>Corrección de actas</li>
+          <li>Juicio Testamentario</li>
+        </ul>
+      </div>
+      <div class="pr-card">
+        <div class="pr-icon">®️</div>
+        <h3>Propiedad Intelectual</h3>
+        <ul>
+          <li>Registro de marcas</li>
+          <li>Nulidad y caducidad</li>
+          <li>ISBN e ISSN</li>
+          <li>Patentes</li>
+          <li>Diseños industriales</li>
+        </ul>
+      </div>
+      <div class="pr-card">
+        <div class="pr-icon">🏛️</div>
+        <h3>Derecho Administrativo</h3>
+        <ul>
+          <li>CONDUSEF</li>
+          <li>PROFECO</li>
+          <li>COFEPRIS</li>
+          <li>Permisos y gestión</li>
+          <li>Juicios administrativos</li>
+        </ul>
+      </div>
+      <div class="pr-card">
+        <div class="pr-icon">📚</div>
+        <h3>Derecho Civil</h3>
+        <ul>
+          <li>Herencias · Activos digitales</li>
+          <li>Contratos</li>
+          <li>Créditos hipotecarios</li>
+          <li>Daños y perjuicios</li>
+          <li>Rectificación de actas</li>
+        </ul>
+      </div>
+      <div class="pr-card">
+        <div class="pr-icon">💼</div>
+        <h3>Derecho Mercantil</h3>
+        <ul>
+          <li>Pagarés</li>
+          <li>Contratos mercantiles</li>
+          <li>Demandas mercantiles</li>
+          <li>Deudas</li>
+          <li>Tercerías</li>
+        </ul>
+      </div>
+      <div class="pr-card">
+        <div class="pr-icon">🛡️</div>
+        <h3>Amparo</h3>
+        <ul>
+          <li>Amparo Directo</li>
+          <li>Amparo Indirecto</li>
+          <li>Congelamiento de cuentas</li>
+          <li>Amparo colectivo</li>
+          <li>Orden de aprehensión</li>
+        </ul>
+      </div>
+      <div class="pr-card">
+        <div class="pr-icon">👔</div>
+        <h3>Derecho Laboral</h3>
+        <ul>
+          <li>Despidos</li>
+          <li>Vacaciones</li>
+          <li>Reinstalación</li>
+          <li>Licencias médicas</li>
+          <li>Días festivos</li>
+        </ul>
+      </div>
+      <!-- NEW 2026 AREAS -->
+      <div class="pr-card new">
+        <div class="pr-icon">🤖</div>
+        <h3>Derecho de la IA</h3>
+        <ul>
+          <li>Responsabilidad por algoritmos</li>
+          <li>Sesgos en decisiones automatizadas</li>
+          <li>Compliance de IA</li>
+          <li>Normativa de datos (LFPDPPP)</li>
+          <li>Regulación de modelos de IA</li>
+        </ul>
+      </div>
+      <div class="pr-card new">
+        <div class="pr-icon">🔗</div>
+        <h3>Activos Digitales &amp; Web3</h3>
+        <ul>
+          <li>Litigio sobre NFTs</li>
+          <li>Recuperación en blockchain</li>
+          <li>Herencias digitales</li>
+          <li>Smart contracts</li>
+          <li>Criptomonedas y fiscalidad</li>
+        </ul>
+      </div>
+      <div class="pr-card new">
+        <div class="pr-icon">🎨</div>
+        <h3>PI Generativa</h3>
+        <ul>
+          <li>Derechos de autor con IA</li>
+          <li>Autoría de obras generadas por IA</li>
+          <li>Protección de prompts</li>
+          <li>Infracción por deepfakes</li>
+          <li>Licencias de contenido sintético</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LABORATORIO LEGALTECH -->
+<section class="lab" id="laboratorio">
+  <div class="lab-cont">
+    <div class="s-header">
+      <div class="s-badge">LABORATORIO LEGALTECH · FORMACIÓN · IA</div>
+      <h2>Laboratorio <span>LegalTech</span></h2>
+      <div class="s-line"></div>
+    </div>
+
+    <!-- MICRO-LEARNING CARDS -->
+    <div class="lab-grid">
+      <div class="lab-card">
+        <div class="lab-img">
+          <img src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?q=80&w=1200&auto=format&fit=crop" alt="Micro-learning">
+          <div class="lab-tag">MICRO-LEARNING</div>
+        </div>
+        <div class="lab-body">
+          <h3>Prompts para Dictámenes Penales</h3>
+          <p>Cápsulas de 5 min sobre cómo usar IA para redactar dictámenes, amparos y recursos de forma precisa y eficiente.</p>
+          <div class="lab-meta">
+            <div class="lab-pill">⏱ <b>5 min</b></div>
+            <div class="lab-pill">📚 <b>12 cápsulas</b></div>
+            <a href="#" class="lab-enter">Ingresar ➜</a>
+          </div>
+        </div>
+      </div>
+      <div class="lab-card">
+        <div class="lab-img">
+          <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200&auto=format&fit=crop" alt="IA en PI">
+          <div class="lab-tag">MICRO-LEARNING</div>
+        </div>
+        <div class="lab-body">
+          <h3>IA en Propiedad Intelectual</h3>
+          <p>Aprende a gestionar marcas, patentes y derechos de autor en la era de la inteligencia artificial generativa.</p>
+          <div class="lab-meta">
+            <div class="lab-pill">⏱ <b>5 min</b></div>
+            <div class="lab-pill">📚 <b>8 cápsulas</b></div>
+            <a href="#" class="lab-enter">Ingresar ➜</a>
+          </div>
+        </div>
+      </div>
+      <div class="lab-card">
+        <div class="lab-img">
+          <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=1200&auto=format&fit=crop" alt="Cursos de Derecho">
+          <div class="lab-tag blue">CURSOS</div>
+        </div>
+        <div class="lab-body">
+          <h3>Cursos de Derecho Digital</h3>
+          <p>Formación especializada en litigio estratégico digital, activos Web3, compliance de IA y regulación de datos.</p>
+          <div class="lab-meta">
+            <div class="lab-pill">🎓 <b>Certificación</b></div>
+            <div class="lab-pill">⭐ <b>4.9 / 5</b></div>
+            <a href="#" class="lab-enter">Ingresar ➜</a>
+          </div>
+        </div>
+      </div>
+      <div class="lab-card">
+        <div class="lab-img">
+          <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop" alt="Libros">
+          <div class="lab-tag">BIBLIOTECA</div>
+        </div>
+        <div class="lab-body">
+          <h3>Libros &amp; Lecturas Legales</h3>
+          <p>Accede a nuestra biblioteca jurídica. Resume textos legales extensos con IA directamente en el navegador.</p>
+          <div class="lab-meta">
+            <div class="lab-pill">📖 <b>Resumen IA</b></div>
+            <div class="lab-pill">📚 <b>+200 títulos</b></div>
+            <a href="#" class="lab-enter">Ingresar ➜</a>
+          </div>
+        </div>
+      </div>
+      <div class="lab-card">
+        <div class="lab-img">
+          <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?q=80&w=1200&auto=format&fit=crop" alt="Videos">
+          <div class="lab-tag blue">VIDEO</div>
+        </div>
+        <div class="lab-body">
+          <h3>Videos Jurídicos</h3>
+          <p>Conferencias, webinars y análisis de casos reales. Formación visual para abogados modernos.</p>
+          <div class="lab-meta">
+            <div class="lab-pill">🎥 <b>HD</b></div>
+            <div class="lab-pill">📺 <b>+80 videos</b></div>
+            <a href="#" class="lab-enter">Ingresar ➜</a>
+          </div>
+        </div>
+      </div>
+      <div class="lab-card">
+        <div class="lab-img">
+          <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1200&auto=format&fit=crop" alt="Blog">
+          <div class="lab-tag">BLOG</div>
+        </div>
+        <div class="lab-body">
+          <h3>Blog LegalTech México</h3>
+          <p>Análisis de las últimas reformas legales, regulación de IA en México y tendencias del derecho digital 2026.</p>
+          <div class="lab-meta">
+            <div class="lab-pill">✍️ <b>Semanal</b></div>
+            <div class="lab-pill">🔔 <b>Suscríbete</b></div>
+            <a href="#" class="lab-enter">Leer ➜</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIMULADOR DE AUDIENCIA -->
+    <div class="sim-banner">
+      <div>
+        <div class="sim-tag">SIMULADOR IA · BETA</div>
+        <h3>Simulador de Audiencia con <em>IA</em></h3>
+        <p>Practica juicios orales en materia penal contra un fiscal generado por inteligencia artificial. Entrena tu argumentación, recibe retroalimentación en tiempo real y mejora tu desempeño en sala.</p>
+        <a href="#" class="btn-sim">Acceder al Simulador →</a>
+      </div>
+      <div class="sim-visual">
+        <div class="sim-icon">🎙️</div>
+        <p>FISCAL VIRTUAL IA</p>
+        <small>Argumentación · Réplica · Scoring</small>
+      </div>
+    </div>
+
+    <!-- LECTOR IA -->
+    <div class="reader-tool">
+      <div class="reader-left">
+        <h3>Modo de Lectura Adaptativo</h3>
+        <p>Pega cualquier texto legal extenso —sentencias, contratos, amparos— y nuestra IA lo resumirá en puntos clave al instante. Directamente en tu navegador.</p>
+        <div class="lab-pill" style="display:inline-flex;margin-top:8px;">🔒 <b style="color:var(--dorado2);margin-left:4px;">100% privado · sin almacenamiento</b></div>
+      </div>
+      <div class="reader-right">
+        <textarea id="reader-input" placeholder="Pega aquí tu texto legal extenso… (sentencia, contrato, amparo, resolución…)"></textarea>
+        <div class="r-div"></div>
+        <div id="reader-output">El resumen IA aparecerá aquí…</div>
+        <div class="r-actions">
+          <button class="r-btn r-btn-p" onclick="summarizeText()">⚡ Resumir con IA</button>
+          <button class="r-btn r-btn-s" onclick="clearReader()">Limpiar</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ACADEMIA PROFESIONAL EAG (CURSOS) -->
+<section class="academia" id="academia">
+  <div class="academia-cont">
+    <div class="s-header">
+      <div class="s-badge">ACADEMIA PROFESIONAL EAG · FORMACIÓN IA · 2026</div>
+      <h2>Academia <span>Profesional EAG</span></h2>
+      <div class="s-line"></div>
+      <p style="color:var(--tm-2);font-size:15px;margin-top:18px;max-width:640px;margin-left:auto;margin-right:auto;">Programas de especialización técnica y legal enfocados en Inteligencia Artificial, impartidos por el mismo equipo detrás de nuestro Laboratorio LegalTech.</p>
+    </div>
+
+    <div class="grid-cursos">
+
+      <!-- CURSO 1: DERECHO E IA -->
+      <div class="card-curso" style="border-color:rgba(199,163,106,.3);">
+        <div>
+          <div class="card-curso-head">
+            <h3 style="color:var(--dorado2);">Derecho e IA</h3>
+            <p style="color:var(--dorado3);">Eficiencia Procesal, Ciberseguridad y Arquitectura Legal</p>
+          </div>
+
+          <div class="step-item">
+            <span class="step-num" style="background:var(--dorado);">01</span>
+            <p><strong>Ciberseguridad &amp; Firma Electrónica:</strong> Higiene digital, e.firma, FIREL y validez probatoria.</p>
+          </div>
+          <div class="step-item">
+            <span class="step-num" style="background:var(--dorado);">02</span>
+            <p><strong>Propiedad Intelectual en IA:</strong> Derechos de autor sobre prompts, Smart Contracts e INDAUTOR.</p>
+          </div>
+          <div class="step-item">
+            <span class="step-num" style="background:var(--dorado);">03</span>
+            <p><strong>Ingeniería de Prompts Jurídica:</strong> Modelado de escenarios, role-playing algorítmico y prevención de errores.</p>
+          </div>
+          <div class="step-item">
+            <span class="step-num" style="background:var(--dorado);">04</span>
+            <p><strong>Justicia Digital &amp; Data Law:</strong> Expediente electrónico y minería de jurisprudencia en la SCJN.</p>
+          </div>
+          <div class="step-item">
+            <span class="step-num" style="background:var(--dorado);">05</span>
+            <p><strong>Prueba Pericial Tecnológica:</strong> Evidencia digital, cadena de custodia Hash e informática forense.</p>
+          </div>
+          <div class="step-item">
+            <span class="step-num" style="background:var(--dorado);">06</span>
+            <p><strong>Legal Design:</strong> Visualización de argumentos, simplificación de contratos y experiencia de usuario.</p>
+          </div>
+        </div>
+
+        <a href="https://wa.me/525574124380?text=Hola,%20deseo%20solicitar%20informes%20sobre%20el%20curso%20de%20Derecho%20e%20IA" target="_blank" class="btn-reserva" style="background:linear-gradient(to right,var(--dorado),var(--dorado2));color:#061423;">SOLICITAR INFORMES · TEL. 55 74 12 43 80</a>
+      </div>
+
+      <!-- CURSO 2: INGENIERÍA E IA -->
+      <div class="card-curso" style="border-color:rgba(99,196,255,.3);">
+        <div>
+          <div class="card-curso-head">
+            <h3 style="color:var(--cyan);">Ingeniería e IA</h3>
+            <p style="color:var(--tm-2);opacity:.9;">Innovación Tecnológica y Blindaje Creativo</p>
+          </div>
+
+          <div class="step-item">
+            <span class="step-num" style="background:var(--cyan);">01</span>
+            <p><strong>Infraestructura &amp; Certificaciones:</strong> Entornos seguros en Google Cloud, Microsoft y Claude.</p>
+          </div>
+          <div class="step-item">
+            <span class="step-num" style="background:var(--cyan);">02</span>
+            <p><strong>Propiedad Industrial &amp; IMPI:</strong> Patentes de software, modelos 4.0, Trade Dress y autoría híbrida.</p>
+          </div>
+          <div class="step-item">
+            <span class="step-num" style="background:var(--cyan);">03</span>
+            <p><strong>Ingeniería de Prompts &amp; Workflows:</strong> Automatización de procesos de desarrollo y código.</p>
+          </div>
+          <div class="step-item">
+            <span class="step-num" style="background:var(--cyan);">04</span>
+            <p><strong>Legal Design Técnico:</strong> Cumplimiento normativo visual en interfaces de usuario (UI/UX).</p>
+          </div>
+          <div class="step-item">
+            <span class="step-num" style="background:var(--cyan);">05</span>
+            <p><strong>Peritaje Digital &amp; T-MEC:</strong> Metadatos, control de versiones Git y defensa de originalidad.</p>
+          </div>
+          <div class="step-item">
+            <span class="step-num" style="background:var(--cyan);">06</span>
+            <p><strong>Licenciamiento &amp; Contratos:</strong> Modelos SaaS, licencias exclusivas y negociación corporativa.</p>
+          </div>
+        </div>
+
+        <a href="https://wa.me/525574124380?text=Hola,%20deseo%20solicitar%20informes%20sobre%20el%20curso%20de%20Ingenier%C3%ADa%20e%20IA" target="_blank" class="btn-reserva" style="border:2px solid var(--cyan);color:var(--cyan);">SOLICITAR INFORMES · TEL. 55 74 12 43 80</a>
+      </div>
+
+      <!-- CURSO 3: DISEÑO E IA -->
+      <div class="card-curso" style="border-color:rgba(231,196,143,.3);">
+        <div>
+          <div class="card-curso-head">
+            <h3 style="color:var(--dorado3);">Diseño e IA</h3>
+            <p style="color:var(--dorado2);">Ingeniería de Prompts y Producción Visual</p>
+          </div>
+
+          <div class="step-item">
+            <span class="step-num" style="background:var(--dorado2);">01</span>
+            <p><strong>Entorno Local &amp; Privacidad:</strong> Ventajas de herramientas offline, UI/UX y control de datos.</p>
+          </div>
+          <div class="step-item">
+            <span class="step-num" style="background:var(--dorado2);">02</span>
+            <p><strong>Anatomía del Prompt Visual:</strong> Sujeto, chips de estilo, iluminación y parámetros de cámara.</p>
+          </div>
+          <div class="step-item">
+            <span class="step-num" style="background:var(--dorado2);">03</span>
+            <p><strong>Composición Avanzada:</strong> Aspect Ratio (16:9, 9:16, 4:5), prompts negativos y renderizado.</p>
+          </div>
+          <div class="step-item">
+            <span class="step-num" style="background:var(--dorado2);">04</span>
+            <p><strong>Flujo Creativo Profesional:</strong> Gestión, exportación y recreación de imágenes complejas.</p>
+          </div>
+          <div class="step-item">
+            <span class="step-num" style="background:var(--dorado2);">05</span>
+            <p><strong>Aplicación Práctica:</strong> Arte conceptual, fotografía de producto y prototipado acelerado.</p>
+          </div>
+        </div>
+
+        <a href="https://wa.me/525574124380?text=Hola,%20deseo%20solicitar%20informes%20sobre%20el%20curso%20de%20Dise%C3%B1o%20e%20IA" target="_blank" class="btn-reserva" style="background:linear-gradient(to right,var(--dorado2),var(--dorado3));color:#061423;">SOLICITAR INFORMES · TEL. 55 74 12 43 80</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SERVICIOS + TRIAJE IA -->
+<section class="servicios" id="servicios">
+  <div class="svc-cont">
+    <div class="s-header">
+      <div class="s-badge">SERVICIOS LEGALES · TRIAJE IA · 2026</div>
+      <h2>Nuestros <span>Servicios</span></h2>
+      <div class="s-line"></div>
+    </div>
+
+    <!-- WIZARD TRIAJE -->
+    <div class="svc-wizard">
+      <div class="svc-wiz-header">
+        <div class="ai-badge-inline"><div class="ai-pulse"></div> TRIAJE LEGAL CON IA</div>
+        <h3>¿Qué tipo de asunto <em>legal tienes?</em></h3>
+        <p>Responde 2 preguntas y te mostraremos los servicios y plantillas exactas para tu caso.</p>
+      </div>
+
+      <!-- INDICADOR DE PASOS -->
+      <div class="wiz-steps" id="wiz-steps">
+        <div class="wiz-step active" id="ws1"><div class="wiz-step-num">1</div>ÁREA</div>
+        <div class="wiz-sep"></div>
+        <div class="wiz-step" id="ws2"><div class="wiz-step-num">2</div>SITUACIÓN</div>
+        <div class="wiz-sep"></div>
+        <div class="wiz-step" id="ws3"><div class="wiz-step-num">3</div>TU SERVICIO</div>
+      </div>
+
+      <!-- PANEL 1: ÁREA -->
+      <div class="wiz-panel active" id="wp1">
+        <div class="svc-cat-grid">
+          <button class="svc-cat-btn" onclick="wizStep1('penal')"><div class="svc-cat-icon">⚖️</div>Derecho Penal</button>
+          <button class="svc-cat-btn" onclick="wizStep1('familiar')"><div class="svc-cat-icon">👨‍👩‍👧</div>Derecho Familiar</button>
+          <button class="svc-cat-btn" onclick="wizStep1('civil')"><div class="svc-cat-icon">📜</div>Derecho Civil</button>
+          <button class="svc-cat-btn" onclick="wizStep1('mercantil')"><div class="svc-cat-icon">💼</div>Derecho Mercantil</button>
+          <button class="svc-cat-btn" onclick="wizStep1('laboral')"><div class="svc-cat-icon">👔</div>Derecho Laboral</button>
+          <button class="svc-cat-btn" onclick="wizStep1('pi')"><div class="svc-cat-icon">®️</div>Propiedad Intelectual</button>
+          <button class="svc-cat-btn" onclick="wizStep1('amparo')"><div class="svc-cat-icon">🛡️</div>Amparo</button>
+          <button class="svc-cat-btn new-area" onclick="wizStep1('digital')"><div class="svc-cat-icon">🤖</div>IA · Digital · Web3</button>
+        </div>
+      </div>
+
+      <!-- PANEL 2: SUBSITUACIÓN (se llena dinámicamente) -->
+      <div class="wiz-panel" id="wp2">
+        <p style="color:var(--tm-4);font-size:13px;margin-bottom:20px;">Selecciona la situación más cercana a tu caso:</p>
+        <div class="svc-sub-grid" id="wiz-sub-grid"></div>
+        <div class="wiz-nav">
+          <button class="wiz-back" onclick="wizBack(1)">← Cambiar área</button>
+        </div>
+      </div>
+
+      <!-- PANEL 3: RESULTADO + PLANTILLA -->
+      <div class="wiz-panel" id="wp3">
+        <div class="svc-result">
+          <div class="svc-result-grid" id="wiz-result-grid">
+            <!-- Se llena dinámicamente -->
+          </div>
+        </div>
+        <div class="wiz-nav">
+          <button class="wiz-back" onclick="wizBack(2)">← Cambiar situación</button>
+          <button class="wiz-reset" onclick="wizReset()">↺ Nuevo triaje</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEED DE SERVICIOS / PLANTILLAS -->
+    <div class="svc-feed">
+      <div class="svc-feed-header">
+        <h3>Todos nuestros <span>Servicios</span></h3>
+        <div class="svc-feed-tabs">
+          <button class="feed-tab active" onclick="feedFilter('todos',this)">Todos</button>
+          <button class="feed-tab" onclick="feedFilter('penal',this)">Penal</button>
+          <button class="feed-tab" onclick="feedFilter('familiar',this)">Familiar</button>
+          <button class="feed-tab" onclick="feedFilter('civil',this)">Civil</button>
+          <button class="feed-tab" onclick="feedFilter('laboral',this)">Laboral</button>
+          <button class="feed-tab" onclick="feedFilter('pi',this)">PI</button>
+          <button class="feed-tab" onclick="feedFilter('digital',this)">IA · Digital</button>
+        </div>
+      </div>
+      <div class="svc-feed-grid" id="svc-feed-grid">
+        <!-- Se renderiza por JS -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CVU / AVAL ACADÉMICO -->
+<section class="cvu-section" id="cvu">
+  <div class="cvu-cont">
+    <div class="s-header">
+      <div class="s-badge">CURRÍCULO VITAE UNIFICADO · MAGISTER IURIS · 2026</div>
+      <h2>Aval <span>Académico &amp; CVU</span></h2>
+      <div class="s-line"></div>
+      <button type="button" class="cvu-modal-btn" onclick="openModal('modal-cv')">📄 Ver CV Completo — Magister Iuris</button>
+    </div>
+
+    <!-- INTRO + CONTADORES -->
+    <div class="cvu-intro">
+      <div class="cvu-intro-text">
+        <h3>La Firma que Avala tu Formación Jurídica</h3>
+        <p>El titular de <strong style="color:var(--dorado2)">EAG Soluciones Legales</strong> ostenta el grado de <em>Magister Iuris</em> (Maestro en Derecho) por la UAM Azcapotzalco, lo que confiere plena validez académica e institucional a todos los cursos, constancias y certificados que llevan la firma del despacho.</p>
+        <p>La especialización en Derecho Ambiental, Derecho Penal, Propiedad Intelectual y LegalTech, respaldada por más de <strong style="color:var(--dorado2)">66 actividades académicas registradas</strong>, garantiza el más alto estándar de rigor analítico y actualización normativa al 2026.</p>
+        <div class="aval-btns">
+          <a href="#contacto" class="aval-btn-p">📜 Solicitar Constancia con Aval</a>
+          <a href="https://api.whatsapp.com/send?phone=525574124380" target="_blank" class="aval-btn-s">💬 WhatsApp</a>
+        </div>
+      </div>
+      <div class="cvu-badge-grid">
+        <div class="cvu-badge"><div class="num">2</div><div class="lbl">GRADOS ACADÉMICOS</div></div>
+        <div class="cvu-badge"><div class="num">11</div><div class="lbl">CURSOS IMPARTIDOS</div></div>
+        <div class="cvu-badge"><div class="num">14</div><div class="lbl">PONENCIAS</div></div>
+        <div class="cvu-badge"><div class="num">66<span style="font-size:22px">+</span></div><div class="lbl">ACTIVIDADES TOTALES</div></div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="cvu-tabs">
+      <button class="cvu-tab active" onclick="cvuTab('formacion',this)">🎓 Formación</button>
+      <button class="cvu-tab" onclick="cvuTab('docencia',this)">🏛️ Docencia</button>
+      <button class="cvu-tab" onclick="cvuTab('diplomados',this)">📜 Diplomados</button>
+      <button class="cvu-tab" onclick="cvuTab('ponencias',this)">🎙️ Ponencias</button>
+      <button class="cvu-tab" onclick="cvuTab('investigacion',this)">🔬 Investigación</button>
+    </div>
+
+    <!-- PANEL: FORMACIÓN -->
+    <div class="cvu-panel active" id="tab-formacion">
+      <div class="cvu-table-wrap">
+        <div class="cvu-table-title"><span class="icon">🎓</span><h4>Formación Académica</h4><span class="cnt">2 GRADOS</span></div>
+        <table class="cvu-table">
+          <thead><tr><th>Grado</th><th>Área de Especialización</th><th>Institución</th><th>Periodo</th><th>Estatus</th></tr></thead>
+          <tbody>
+            <tr><td>Maestría en Derecho (Magister Iuris)</td><td>Derecho Ambiental</td><td>UAM Azcapotzalco</td><td>2017–2020</td><td><span class="cvu-pill instructor">CONCLUIDA</span></td></tr>
+            <tr><td>Licenciatura en Derecho</td><td>Ciencias Penales y Criminológicas</td><td>UAM Azcapotzalco</td><td>2009–2014</td><td><span class="cvu-pill alumno">CÉDULA PROF.</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PANEL: DOCENCIA -->
+    <div class="cvu-panel" id="tab-docencia">
+      <div class="cvu-table-wrap">
+        <div class="cvu-table-title"><span class="icon">🏛️</span><h4>Actividad Docente — Instructor / Ponente en Cursos</h4><span class="cnt">11 CURSOS</span></div>
+        <p style="color:#4a6a7a;font-size:13px;margin-bottom:16px;font-style:italic;">Los siguientes cursos cuentan con la firma y aval institucional de EAG Soluciones Legales, respaldados por el grado Magister Iuris.</p>
+        <table class="cvu-table">
+          <thead><tr><th>Curso</th><th>Eje Temático</th><th>Institución</th><th>Año</th><th>Horas</th><th>Rol</th></tr></thead>
+          <tbody>
+            <tr><td>Panorama Jurídico de la PI y T-MEC</td><td>Propiedad Intelectual</td><td>UAM Azcapotzalco</td><td>2020</td><td>20 hrs</td><td><span class="cvu-pill instructor">INSTRUCTOR</span></td></tr>
+            <tr><td>Compliance Revolution: Innovando la Ética Legal</td><td>Derecho Corporativo</td><td>UAM Azcapotzalco</td><td>2025</td><td>20 hrs</td><td><span class="cvu-pill instructor">INSTRUCTOR</span></td></tr>
+            <tr><td>Defensa Jurisdiccional de los Derechos Humanos</td><td>Derechos Humanos</td><td>UAM Azcapotzalco</td><td>2024</td><td>20 hrs</td><td><span class="cvu-pill instructor">INSTRUCTOR</span></td></tr>
+            <tr><td>La Protección de los Derechos Humanos y el Amparo</td><td>Derechos Humanos</td><td>UAM Azcapotzalco</td><td>2023</td><td>20 hrs</td><td><span class="cvu-pill instructor">INSTRUCTOR</span></td></tr>
+            <tr><td>El Arte de la Defensa. Proceso Penal en Acción</td><td>Derecho Penal</td><td>UAM Azcapotzalco</td><td>2025</td><td>20 hrs</td><td><span class="cvu-pill instructor">INSTRUCTOR</span></td></tr>
+            <tr><td>Sistema Penal Acusatorio</td><td>Derecho Penal</td><td>UAM Azcapotzalco</td><td>2024</td><td>40 hrs</td><td><span class="cvu-pill instructor">INSTRUCTOR</span></td></tr>
+            <tr><td>Formalidad y Esencia del Sistema Penal</td><td>Derecho Penal</td><td>UAM Azcapotzalco</td><td>2023</td><td>20 hrs</td><td><span class="cvu-pill instructor">INSTRUCTOR</span></td></tr>
+            <tr><td>Panorama de Derechos de Autor en la Era Digital</td><td>Propiedad Intelectual</td><td>UAM Azcapotzalco</td><td>2022</td><td>20 hrs</td><td><span class="cvu-pill instructor">INSTRUCTOR</span></td></tr>
+            <tr><td>Conceptos Básicos de Amparo y Derechos Humanos</td><td>Derechos Humanos</td><td>UAM Azcapotzalco</td><td>2021</td><td>20 hrs</td><td><span class="cvu-pill instructor">INSTRUCTOR</span></td></tr>
+            <tr><td>Introducción a la Investigación</td><td>Metodología</td><td>UAM Azcapotzalco</td><td>2017</td><td>16 hrs</td><td><span class="cvu-pill instructor">INSTRUCTOR</span></td></tr>
+            <tr><td>Curso Básico de Propiedad Intelectual</td><td>Propiedad Intelectual</td><td>UAM / SEP</td><td>2018</td><td>20 hrs</td><td><span class="cvu-pill instructor">INSTRUCTOR</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PANEL: DIPLOMADOS -->
+    <div class="cvu-panel" id="tab-diplomados">
+      <div class="cvu-table-wrap">
+        <div class="cvu-table-title"><span class="icon">📜</span><h4>Diplomados y Certificaciones Especializadas</h4><span class="cnt">8 REGISTROS</span></div>
+        <table class="cvu-table">
+          <thead><tr><th>Diplomado / Certificación</th><th>Eje Temático</th><th>Institución</th><th>Año</th><th>Horas</th></tr></thead>
+          <tbody>
+            <tr><td>Sistema Penal Acusatorio</td><td>Derecho Penal</td><td>UAM</td><td>2016</td><td>96 hrs</td></tr>
+            <tr><td>Justicia y Pluralismo</td><td>Pueblos Indígenas</td><td>UNAM</td><td>2012</td><td>120 hrs</td></tr>
+            <tr><td>Derechos Digitales, Protección de Datos y Privacidad</td><td>Derecho Informático</td><td>UAM Azc</td><td>2017</td><td>55 hrs</td></tr>
+            <tr><td>Derechos Humanos: Entre lo Real y lo Posible</td><td>Derechos Humanos</td><td>UAM Azc</td><td>2012</td><td>70 hrs</td></tr>
+            <tr><td>Derechos Humanos, Derecho Indígena y Mujeres Siglo XXI</td><td>Derechos Humanos</td><td>UAM Azc</td><td>2015</td><td>63 hrs</td></tr>
+            <tr><td>Juicio de Amparo</td><td>Amparo</td><td>SCJN</td><td>2022</td><td>78 hrs</td></tr>
+            <tr><td>Curso General de Propiedad Intelectual</td><td>Propiedad Intelectual</td><td>OMPI</td><td>2014</td><td>—</td></tr>
+            <tr><td>Certificación PREZI de Presentaciones</td><td>Diseño Digital</td><td>PREZI</td><td>2014</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PANEL: PONENCIAS -->
+    <div class="cvu-panel" id="tab-ponencias">
+      <div class="cvu-table-wrap">
+        <div class="cvu-table-title"><span class="icon">🎙️</span><h4>Ponencias en Congresos, Seminarios y Foros</h4><span class="cnt">14 PONENCIAS</span></div>
+        <table class="cvu-table">
+          <thead><tr><th>Ponencia</th><th>Eje Temático</th><th>Institución / Evento</th><th>Año</th></tr></thead>
+          <tbody>
+            <tr><td>Paradigmas de Hábitat III</td><td>Derecho Urbanístico</td><td>IPN</td><td>2018</td></tr>
+            <tr><td>Paradigmas de Hábitat III</td><td>Derecho Urbanístico</td><td>UACh</td><td>2016</td></tr>
+            <tr><td>Marginación y Pobreza</td><td>Derecho Urbanístico</td><td>UACh</td><td>2015</td></tr>
+            <tr><td>Ciencias Sociales — CCSH</td><td>Derechos Humanos</td><td>CCSH</td><td>2017</td></tr>
+            <tr><td>Urbanismo con Perspectiva de Género</td><td>Derecho Urbanístico</td><td>UAM Azcapotzalco</td><td>2017</td></tr>
+            <tr><td>La Ciudad entre Muros</td><td>Derecho Urbanístico</td><td>UAM</td><td>2014</td></tr>
+            <tr><td>Pobreza y Desarrollo Rural de los Pueblos Indios (OIT 169)</td><td>Derechos Humanos</td><td>UAM Azcapotzalco</td><td>2012</td></tr>
+            <tr><td>Segundo Congreso de Pueblos Indígenas <span class="cvu-pill ponente" style="margin-left:6px">INTERNACIONAL</span></td><td>Derechos Humanos</td><td>Univ. Nacional de la Pampa, Argentina</td><td>2016</td></tr>
+            <tr><td>Teoría del Estado, Cine y Literatura</td><td>Derecho</td><td>UACh</td><td>2017</td></tr>
+            <tr><td>Seminario Internacional de Filosofía Andina</td><td>Filosofía</td><td>UAM / IHC / UACh</td><td>2016</td></tr>
+            <tr><td>La Educación Reformada</td><td>Docencia</td><td>UAM</td><td>2013</td></tr>
+            <tr><td>Inversión y Desarrollo Humano</td><td>Derecho Ambiental</td><td>UAM Azcapotzalco</td><td>2016</td></tr>
+            <tr><td>Seminario Programa CONACYT</td><td>Metodología</td><td>UAM Azcapotzalco</td><td>2016</td></tr>
+            <tr><td>Estadística Agraria en el Marco del Neoliberalismo</td><td>Derecho Ambiental</td><td>UAM Azcapotzalco</td><td>2016</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PANEL: INVESTIGACIÓN -->
+    <div class="cvu-panel" id="tab-investigacion">
+      <div class="cvu-table-wrap">
+        <div class="cvu-table-title"><span class="icon">🔬</span><h4>Coordinación, Investigación y Apoyo Institucional</h4><span class="cnt">5 ACTIVIDADES</span></div>
+        <table class="cvu-table">
+          <thead><tr><th>Actividad</th><th>Área</th><th>Institución</th><th>Periodo</th><th>Alcance</th></tr></thead>
+          <tbody>
+            <tr><td>Ayudante de Investigación SNI Nivel III</td><td>Investigación Científica</td><td>UAM Azcapotzalco</td><td>2016–2018</td><td><span class="cvu-pill coord">SNI III</span></td></tr>
+            <tr><td>Coordinación de Exámenes de Ingreso a Maestría</td><td>Posgrado</td><td>UAM Azcapotzalco</td><td>2016</td><td>50 hrs</td></tr>
+            <tr><td>Seminario de Derechos Humanos</td><td>Derechos Humanos</td><td>UAM Azcapotzalco</td><td>2015</td><td>100 hrs</td></tr>
+            <tr><td>Asistencia Académica y Administrativa — Maestría en Derecho</td><td>Gestión Académica</td><td>UAM Azcapotzalco</td><td>2016–2018</td><td><span class="cvu-pill coord">POSGRADO</span></td></tr>
+            <tr><td>Prácticas Voluntarias</td><td>Propiedad Intelectual</td><td>IMPI</td><td>2014</td><td>400 hrs</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- BANNER DE AVAL -->
+    <div class="aval-banner">
+      <div class="aval-content">
+        <h3>Firma Institucional con Validez Académica</h3>
+        <p>La firma de EAG Soluciones Legales en constancias y certificados de cursos de Derecho representa una garantía de <strong style="color:var(--dorado2)">especialización, actualización normativa y alta capacidad analítica</strong> acorde a los estándares del ejercicio profesional en 2026. El grado Magister Iuris es el respaldo académico que distingue a nuestra firma.</p>
+        <div class="aval-btns" style="margin-top:20px;">
+          <a href="tel:5574124380" class="aval-btn-p">📞 Solicitar Aval — 55 74 12 43 80</a>
+          <a href="mailto:eag.soluciones.legales@gmail.com" class="aval-btn-s">✉️ Correo Electrónico</a>
+        </div>
+      </div>
+      <div class="aval-seal">
+        <div class="seal-icon">🎓</div>
+        <p>MAGISTER IURIS</p>
+        <small>UAM Azcapotzalco · 2020</small>
+        <br><br>
+        <div class="seal-icon" style="font-size:32px;">⚖️</div>
+        <p>EAG SOLUCIONES LEGALES</p>
+        <small>Firma Institucional · 2026</small>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- REDES SOCIALES -->
+<!-- AVISO DE PRIVACIDAD -->
+<section class="privacidad-section" id="privacidad">
+  <div class="privacidad-container">
+    <div class="s-header" style="margin-bottom:24px;text-align:left;">
+      <div class="s-badge">CUMPLIMIENTO LFPDPPP · MÉXICO</div>
+      <h2 style="text-align:left;font-size:38px;">Aviso de <span>Privacidad Integral</span></h2>
+    </div>
+
+    <p><strong>EAG Soluciones Legales</strong>, con domicilio en la Ciudad de México, México, es el responsable del tratamiento y protección de sus datos personales, conforme a la Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP).</p>
+
+    <h4>1. Datos Personales que Recabamos</h4>
+    <p>Para la prestación de nuestros servicios de asesoría jurídica, litigio, contratos, trámites de propiedad intelectual y consultoría legal, podremos recabar:</p>
+    <ul>
+      <li><strong>Datos de Identificación y Contacto:</strong> Nombre completo, identificación oficial, RFC, CURP, domicilio, correo electrónico, teléfono fijo y celular.</li>
+      <li><strong>Datos Patrimoniales o Financieros:</strong> Información necesaria para la elaboración de contratos, convenios, facturación y cobro de honorarios.</li>
+      <li><strong>Datos Sensibles y Legales:</strong> Información procesal, antecedentes jurídicos, documentos constitutivos o probatorios indispensables para la estrategia de defensa legal.</li>
+    </ul>
+
+    <h4>2. Finalidades del Tratamiento de Datos</h4>
+    <p><strong>Finalidades Primarias (necesarias para el servicio):</strong></p>
+    <ul>
+      <li>Verificación de identidad y diagnóstico de su situación jurídica.</li>
+      <li>Prestación de servicios profesionales de representación legal, consultoría y elaboración de instrumentos jurídicos.</li>
+      <li>Gestión de trámites ante autoridades judiciales, administrativas y de propiedad intelectual.</li>
+      <li>Emisión de comprobantes fiscales y gestión de cobros.</li>
+    </ul>
+    <p><strong>Finalidades Secundarias (opcionales):</strong></p>
+    <ul>
+      <li>Envío de boletines informativos, actualizaciones legislativas y eventos de nuestra Academia y Laboratorio LegalTech.</li>
+    </ul>
+
+    <h4>3. Derechos ARCO y Revocación del Consentimiento</h4>
+    <p>Usted tiene derecho a conocer qué datos personales tenemos, para qué los utilizamos y las condiciones del uso que les damos (Acceso). Asimismo, es su derecho solicitar la corrección de su información (Rectificación), que la eliminemos de nuestros registros (Cancelación) u oponerse al uso de los mismos para fines específicos (Oposición).</p>
+
+    <h4>4. Transferencia de Datos Personales</h4>
+    <p>Sus datos personales únicamente serán transferidos a autoridades judiciales o administrativas en la medida estrictamente indispensable para el cumplimiento de las obligaciones contractuales y de defensa legal encomendadas, o por mandato legal de autoridad competente.</p>
+
+    <div class="privacidad-contact">
+      <p>Para ejercer sus derechos ARCO, envíe una solicitud formal a nuestro departamento de privacidad.</p>
+      <a href="tel:5574124380" class="call-btn">TEL. 55 74 12 43 80</a>
+    </div>
+  </div>
+</section>
+
+<section class="social-bar">
+  <div class="social-bar-inner">
+    <div class="social-bar-title">
+      <p>SÍGUENOS EN</p>
+      <h3>Nuestras <span>Redes Sociales</span></h3>
+    </div>
+    <div class="social-grid">
+
+      <!-- WhatsApp -->
+      <a class="soc-link wa" href="https://api.whatsapp.com/send?phone=525548260412" target="_blank" rel="noopener">
+        <div class="soc-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        </div>
+        <span class="soc-label">WHATSAPP</span>
+      </a>
+
+      <!-- Facebook -->
+      <a class="soc-link" href="https://www.facebook.com/profile.php?id=61551492676282&locale=es_LA" target="_blank" rel="noopener">
+        <div class="soc-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </div>
+        <span class="soc-label">FACEBOOK</span>
+      </a>
+
+      <!-- Instagram -->
+      <a class="soc-link" href="https://www.instagram.com/eag_asociados/" target="_blank" rel="noopener">
+        <div class="soc-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        </div>
+        <span class="soc-label">INSTAGRAM</span>
+      </a>
+
+      <!-- TikTok -->
+      <a class="soc-link" href="https://www.tiktok.com/@el_manual_del_abogado" target="_blank" rel="noopener">
+        <div class="soc-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+        </div>
+        <span class="soc-label">TIKTOK</span>
+      </a>
+
+      <!-- YouTube -->
+      <a class="soc-link" href="https://www.youtube.com/channel/UCyWrOkqK3mF9cdpRVzgijTQ" target="_blank" rel="noopener">
+        <div class="soc-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+        </div>
+        <span class="soc-label">YOUTUBE</span>
+      </a>
+
+      <!-- X / Twitter -->
+      <a class="soc-link" href="https://x.com/EAG_Asociados" target="_blank" rel="noopener">
+        <div class="soc-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.63L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </div>
+        <span class="soc-label">X · TWITTER</span>
+      </a>
+
+      <!-- LinkedIn -->
+      <a class="soc-link" href="https://www.linkedin.com/in/eag-soluciones-legales-2735a8326/" target="_blank" rel="noopener">
+        <div class="soc-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        </div>
+        <span class="soc-label">LINKEDIN</span>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER / CONTACTO -->
+<footer class="footer" id="contacto">
+  <div class="ft-cont">
+    <div class="ft-logo">
+      <img src="https://i.ibb.co/zC9JJNB/EAG-0004.png" alt="EAG">
+      <h3>EAG Soluciones Legales</h3>
+      <p>Innovación Jurídica · Inteligencia Artificial · Defensa Estratégica</p>
+      <div class="ft-social">
+        <a class="ft-soc wa" href="https://api.whatsapp.com/send?phone=525548260412" target="_blank" title="WhatsApp">
+          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        </a>
+        <a class="ft-soc" href="https://www.facebook.com/profile.php?id=61551492676282" target="_blank" title="Facebook">
+          <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </a>
+        <a class="ft-soc" href="https://www.instagram.com/eag_asociados/" target="_blank" title="Instagram">
+          <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        </a>
+        <a class="ft-soc" href="https://www.tiktok.com/@el_manual_del_abogado" target="_blank" title="TikTok">
+          <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+        </a>
+        <a class="ft-soc" href="https://www.youtube.com/channel/UCyWrOkqK3mF9cdpRVzgijTQ" target="_blank" title="YouTube">
+          <svg viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+        </a>
+        <a class="ft-soc" href="https://x.com/EAG_Asociados" target="_blank" title="X · Twitter">
+          <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.63L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+        <a class="ft-soc" href="https://www.linkedin.com/in/eag-soluciones-legales-2735a8326/" target="_blank" title="LinkedIn">
+          <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="ft-contact">
+      <h4>Contacto</h4>
+      <p>📍 CALLE SAYULA NO. 316 COLONIA CARBONERA, ALCALDIA MAGDALENA CONTRERAS, C.P. 10360, CIUDAD DE MÉXICO, CDMX.</p>
+      <p>📧 eag.soluciones.legales@gmail.com</p>
+      <p>📱 55 74 12 43 80</p>
+      <a href="https://maps.app.goo.gl/oX74uZjvHRUdg8TJ7" target="_blank" class="map-btn">📍Ver Ubicación</a>
+    </div>
+    <div class="ft-triage">
+      <h4>Triaje Legal IA</h4>
+      <p>¿No sabes qué tipo de caso tienes? Selecciona tu situación:</p>
+      <div class="tr-options">
+        <button class="tr-btn" onclick="triage('penal')"><span class="tr-icon">⚖️</span> Mi caso involucra un delito o denuncia</button>
+        <button class="tr-btn" onclick="triage('civil')"><span class="tr-icon">🏠</span> Es sobre una deuda, contrato o herencia</button>
+        <button class="tr-btn" onclick="triage('familiar')"><span class="tr-icon">👨‍👩‍👧</span> Asunto de divorcio, custodia o pensión</button>
+        <button class="tr-btn" onclick="triage('digital')"><span class="tr-icon">🤖</span> Involucra IA, datos o activos digitales</button>
+        <button class="tr-btn" onclick="triage('laboral')"><span class="tr-icon">💼</span> Problema con mi trabajo o empleador</button>
+      </div>
+      <div id="triage-result"></div>
+    </div>
+  </div>
+  <div class="ft-bottom">
+    <p>© 2026 EAG Soluciones Legales · Todos los derechos reservados</p>
+    <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;">
+      <a href="#privacidad" style="color:rgba(199,163,106,.35);font-size:11px;text-decoration:none;font-weight:600;transition:.3s;" onmouseover="this.style.color='var(--dorado2)'" onmouseout="this.style.color='rgba(199,163,106,.35)'">Aviso de Privacidad</a>
+      <span style="color:var(--wht-08)">·</span>
+      <a href="https://api.whatsapp.com/send?phone=525548260412" target="_blank" style="color:rgba(199,163,106,.35);font-size:11px;text-decoration:none;font-weight:600;transition:.3s;" onmouseover="this.style.color='#4ade80'" onmouseout="this.style.color='rgba(199,163,106,.35)'">WhatsApp</a>
+      <span style="color:var(--wht-08)">·</span>
+      <a href="https://www.instagram.com/eag_asociados/" target="_blank" style="color:rgba(199,163,106,.35);font-size:11px;text-decoration:none;font-weight:600;transition:.3s;" onmouseover="this.style.color='var(--dorado2)'" onmouseout="this.style.color='rgba(199,163,106,.35)'">Instagram</a>
+      <span style="color:var(--wht-08)">·</span>
+      <a href="https://www.tiktok.com/@el_manual_del_abogado" target="_blank" style="color:rgba(199,163,106,.35);font-size:11px;text-decoration:none;font-weight:600;transition:.3s;" onmouseover="this.style.color='var(--dorado2)'" onmouseout="this.style.color='rgba(199,163,106,.35)'">TikTok</a>
+      <span style="color:var(--wht-08)">·</span>
+      <a href="https://www.youtube.com/channel/UCyWrOkqK3mF9cdpRVzgijTQ" target="_blank" style="color:rgba(199,163,106,.35);font-size:11px;text-decoration:none;font-weight:600;transition:.3s;" onmouseover="this.style.color='var(--dorado2)'" onmouseout="this.style.color='rgba(199,163,106,.35)'">YouTube</a>
+      <span style="color:var(--wht-08)">·</span>
+      <a href="https://x.com/EAG_Asociados" target="_blank" style="color:rgba(199,163,106,.35);font-size:11px;text-decoration:none;font-weight:600;transition:.3s;" onmouseover="this.style.color='var(--dorado2)'" onmouseout="this.style.color='rgba(199,163,106,.35)'">X</a>
+      <span style="color:var(--wht-08)">·</span>
+      <a href="https://www.linkedin.com/in/eag-soluciones-legales-2735a8326/" target="_blank" style="color:rgba(199,163,106,.35);font-size:11px;text-decoration:none;font-weight:600;transition:.3s;" onmouseover="this.style.color='var(--dorado2)'" onmouseout="this.style.color='rgba(199,163,106,.35)'">LinkedIn</a>
+    </div>
+    <p>Diseño LegalTech · Ciudad de México</p>
+  </div>
+</footer>
+
+<!-- AI CHATBOT FAB -->
+<div class="ai-fab">
+  <div class="ai-panel" id="ai-panel">
+    <div class="ai-head">
+      <div class="ai-av">⚖️</div>
+      <div class="ai-head-txt">
+        <h4>Asistente Legal EAG</h4>
+        <p>IA · Respuesta inmediata</p>
+      </div>
+    </div>
+    <div class="ai-msgs" id="ai-msgs">
+      <div class="ai-msg bot">¡Hola! Soy el asistente legal de EAG. ¿En qué puedo ayudarte hoy? Puedo clasificar tu caso y conectarte con el especialista adecuado.</div>
+    </div>
+    <div class="ai-qbtns" id="ai-qbtns">
+      <button class="ai-qbtn" onclick="aiQuick('¿Es mi caso civil o mercantil?')">⚖️ ¿Es mi caso civil o mercantil?</button>
+      <button class="ai-qbtn" onclick="aiQuick('Necesito asesoría urgente')">🚨 Necesito asesoría urgente</button>
+      <button class="ai-qbtn" onclick="aiQuick('¿Qué áreas de derecho manejan?')">📚 ¿Qué áreas manejan?</button>
+    </div>
+    <div class="ai-in-row">
+      <input class="ai-inp" id="ai-inp" placeholder="Describe tu situación…" onkeydown="if(event.key==='Enter')aiSend()">
+      <button class="ai-send" onclick="aiSend()">➜</button>
+    </div>
+  </div>
+  <button class="ai-fab-btn" onclick="toggleAI()" id="ai-fab-btn">⚖️</button>
+</div>
+
+<!-- ============================================================
+     MODAL · CV COMPLETO (MAGISTER IURIS)
+     ============================================================ -->
+<div class="modal-overlay" id="modal-cv" onclick="if(event.target===this)closeModal('modal-cv')">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modal-cv-title">
+    <button type="button" class="modal-close" onclick="closeModal('modal-cv')" aria-label="Cerrar">✕</button>
+    <div class="modal-head">
+      <h3 id="modal-cv-title">CV Completo — Magister Iuris</h3>
+      <p>Resumen curricular consolidado del titular de EAG Soluciones Legales. Cópialo o descárgalo para compartirlo.</p>
+    </div>
+    <div class="modal-cv-body" id="modal-cv-body">Cargando resumen…</div>
+    <div class="modal-actions">
+      <button type="button" class="modal-btn modal-btn-p" onclick="copyCV()">📋 Copiar CV</button>
+      <a href="tel:5574124380" class="modal-btn modal-btn-s">📞 Solicitar Aval — 55 74 12 43 80</a>
+    </div>
+    <div class="modal-copy-toast" id="modal-copy-toast">✓ CV copiado al portapapeles</div>
+  </div>
+</div>
+
+<script>
+/* ============================
+   NEURAL NETWORK CANVAS
+   ============================ */
+(function(){
+  const canvas = document.getElementById('neural-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, nodes = [], mouse = {x:-999,y:-999};
+  const NODE_COUNT = 55, MAX_DIST = 170;
+
+  function resize(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  window.addEventListener('resize', resize);
+  resize();
+
+  for(let i=0;i<NODE_COUNT;i++){
+    nodes.push({
+      x: Math.random()*W, y: Math.random()*H,
+      vx:(Math.random()-.5)*.28, vy:(Math.random()-.5)*.28,
+      r: Math.random()*2.5+1
+    });
+  }
+
+  document.addEventListener('mousemove',e=>{ mouse.x=e.clientX; mouse.y=e.clientY; });
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    // Move nodes
+    nodes.forEach(n=>{
+      n.x += n.vx; n.y += n.vy;
+      if(n.x<0||n.x>W) n.vx*=-1;
+      if(n.y<0||n.y>H) n.vy*=-1;
+    });
+    // Draw connections
+    for(let i=0;i<nodes.length;i++){
+      for(let j=i+1;j<nodes.length;j++){
+        const dx=nodes[i].x-nodes[j].x, dy=nodes[i].y-nodes[j].y;
+        const dist=Math.sqrt(dx*dx+dy*dy);
+        if(dist<MAX_DIST){
+          const mdx=mouse.x-(nodes[i].x+nodes[j].x)/2;
+          const mdy=mouse.y-(nodes[i].y+nodes[j].y)/2;
+          const md=Math.sqrt(mdx*mdx+mdy*mdy);
+          const glow = md < 180 ? Math.min(1,(180-md)/180) : 0;
+          const base = 1-dist/MAX_DIST;
+          const alpha = base*0.18 + glow*0.5;
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x,nodes[i].y);
+          ctx.lineTo(nodes[j].x,nodes[j].y);
+          if(glow>0.2){
+            ctx.strokeStyle=`rgba(99,196,255,${alpha})`;
+          } else {
+            ctx.strokeStyle=`rgba(199,163,106,${alpha})`;
+          }
+          ctx.lineWidth=glow>0.2?1.2:.6;
+          ctx.stroke();
+        }
+      }
+    }
+    // Draw nodes
+    nodes.forEach(n=>{
+      const dx=mouse.x-n.x, dy=mouse.y-n.y;
+      const md=Math.sqrt(dx*dx+dy*dy);
+      const glow=md<160?Math.min(1,(160-md)/160):0;
+      ctx.beginPath();
+      ctx.arc(n.x,n.y,n.r*(1+glow*1.5),0,Math.PI*2);
+      ctx.fillStyle=glow>0.3?`rgba(99,196,255,${0.4+glow*.5})`:`rgba(199,163,106,${0.25+glow*.3})`;
+      ctx.fill();
+      if(glow>0.4){
+        ctx.beginPath();
+        ctx.arc(n.x,n.y,n.r*3,0,Math.PI*2);
+        ctx.fillStyle=`rgba(99,196,255,${glow*.12})`;
+        ctx.fill();
+      }
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ============================
+   DYNAMIC COUNTERS
+   ============================ */
+function animateCounter(id, target, duration){
+  const el = document.getElementById(id);
+  let start=0, step=target/((duration/16));
+  const interval=setInterval(()=>{
+    start=Math.min(start+step,target);
+    el.textContent=Math.floor(start).toLocaleString('es-MX');
+    if(start>=target) clearInterval(interval);
+  },16);
+}
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    animateCounter('ctr-cases',1247,2200);
+    animateCounter('ctr-students',3580,2600);
+  },600);
+});
+
+/* ============================
+   SPLASH SCREEN
+   ============================ */
+(function initSplash(){
+  // Generar tiles del grid
+  const grid=document.getElementById('splash-grid');
+  if(grid){
+    for(let i=0;i<160;i++){
+      const t=document.createElement('div');
+      t.className='splash-tile';
+      grid.appendChild(t);
+    }
+  }
+  // Generar partículas flotantes
+  const pc=document.getElementById('splash-particles');
+  if(pc){
+    for(let i=0;i<22;i++){
+      const d=document.createElement('div');
+      d.className='sp-dot';
+      d.style.left=Math.random()*100+'%';
+      d.style.top=Math.random()*100+'%';
+      d.style.animationDuration=(6+Math.random()*10)+'s';
+      d.style.animationDelay=(Math.random()*8)+'s';
+      d.style.width=d.style.height=(2+Math.random()*3)+'px';
+      pc.appendChild(d);
+    }
+  }
+})();
+
+function enterSite(e){
+  e.preventDefault();
+  const splash=document.getElementById('splash');
+  splash.classList.add('splash-exit');
+  setTimeout(function(){
+    splash.style.display='none';
+    document.body.style.overflow='';
+  },950);
+}
+
+// Bloquear scroll mientras la splash está activa
+document.body.style.overflow='hidden';
+
+/* ============================
+   SERVICIOS · TRIAJE WIZARD + FEED
+   ============================ */
+
+/* ── BASE DE DATOS DE SERVICIOS ──────────────────── */
+const SERVICIOS_DB = [
+  // PENAL
+  {id:'p1',area:'penal',icon:'⚖️',title:'Defensa en Juicio Oral Penal',desc:'Representación integral en audiencias del sistema acusatorio. Estrategia de litigación oral desde carpeta de investigación hasta sentencia.',tags:['Juicio Oral','Sistema Acusatorio','Defensa'],subs:['Acusado de un delito','Juicio oral en proceso','Necesito abogado penal']},
+  {id:'p2',area:'penal',icon:'🚨',title:'Violencia Familiar y Denuncias',desc:'Orientación y representación en denuncias por violencia familiar, medidas de protección y seguimiento ministerial.',tags:['Denuncia','Violencia','MP'],subs:['Víctima de violencia','Presentar denuncia','Medida de protección']},
+  {id:'p3',area:'penal',icon:'🤝',title:'Acuerdos Reparatorios y Procedimiento Abreviado',desc:'Gestión de salidas alternas al proceso penal para resolución ágil y favorable: acuerdos reparatorios, suspensión condicional y procedimiento abreviado.',tags:['Salida Alterna','Procedimiento Abreviado','Acuerdo'],subs:['Acusado de un delito','Quiero resolver rápido','Procedimiento abreviado']},
+  // FAMILIAR
+  {id:'f1',area:'familiar',icon:'💍',title:'Divorcio',desc:'Trámite de divorcio voluntario o contencioso. Acuerdos sobre bienes, custodia y pensión. Resolución ágil y confidencial.',tags:['Divorcio','Familia','Bienes'],subs:['Quiero divorciarme','Divorcio contencioso','Divorcio voluntario']},
+  {id:'f2',area:'familiar',icon:'👶',title:'Guardia, Custodia y Pensión Alimenticia',desc:'Determinación judicial de custodia, régimen de visitas y fijación de pensión alimenticia para menores. Defensa de tus derechos como padre o madre.',tags:['Custodia','Pensión','Menores'],subs:['Pensión alimenticia','Custodia de hijos','Visitas negadas']},
+  {id:'f3',area:'familiar',icon:'📋',title:'Sucesiones y Herencias',desc:'Tramitación de juicios testamentarios e intestamentarios. Inventario de bienes, adjudicación y registro ante notario.',tags:['Herencia','Testamento','Sucesión'],subs:['Falleció un familiar','Hay testamento','Sin testamento']},
+  {id:'f4',area:'familiar',icon:'📝',title:'Corrección y Rectificación de Actas',desc:'Correcciones en actas de nacimiento, matrimonio o defunción ante el Registro Civil. Trámite administrativo y judicial.',tags:['Acta','Registro Civil','Corrección'],subs:['Error en acta','Cambio de nombre','Registro civil']},
+  // CIVIL
+  {id:'c1',area:'civil',icon:'🏠',title:'Contratos e Inmuebles',desc:'Redacción, revisión y litigio de contratos de compraventa, arrendamiento e hipoteca. Protección de tu patrimonio inmobiliario.',tags:['Contrato','Inmueble','Compraventa'],subs:['Problema con contrato','Compraventa de inmueble','Crédito hipotecario']},
+  {id:'c2',area:'civil',icon:'💰',title:'Daños y Perjuicios',desc:'Reclamación de daños materiales y morales en sede civil. Cuantificación del daño y ejecución de sentencia.',tags:['Daños','Perjuicios','Reclamación'],subs:['Me causaron daños','Accidente','Responsabilidad civil']},
+  // MERCANTIL
+  {id:'m1',area:'mercantil',icon:'📊',title:'Cobro de Pagarés y Deudas',desc:'Juicio ejecutivo mercantil para cobro de pagarés, facturas y documentos de crédito. Embargo y remate en caso de incumplimiento.',tags:['Pagaré','Cobro','Ejecutivo'],subs:['Me deben dinero','Tengo un pagaré','Deuda incobrable']},
+  {id:'m2',area:'mercantil',icon:'🏢',title:'Contratos y Disputas Mercantiles',desc:'Defensa en demandas mercantiles, tercerías e incidentes. Asesoría en contratos comerciales y joint ventures.',tags:['Mercantil','Contrato','Empresa'],subs:['Disputa comercial','Incumplimiento contrato','Tercería']},
+  // LABORAL
+  {id:'l1',area:'laboral',icon:'👔',title:'Despido Injustificado y Reinstalación',desc:'Demanda ante la JLCA o el TFJA por despido injustificado. Cálculo de liquidación, reinstalación o indemnización constitucional.',tags:['Despido','Laboral','JLCA'],subs:['Me despidieron','Quiero reinstalación','Cálculo liquidación']},
+  {id:'l2',area:'laboral',icon:'📅',title:'Vacaciones, Aguinaldo y Prestaciones',desc:'Reclamación de prestaciones no pagadas: vacaciones, prima vacacional, aguinaldo, horas extras y días festivos laborados.',tags:['Prestaciones','Vacaciones','Aguinaldo'],subs:['No me pagan prestaciones','Horas extras','Días festivos']},
+  {id:'l3',area:'laboral',icon:'🏥',title:'Incapacidades y Riesgos de Trabajo',desc:'Gestión ante el IMSS y demanda por accidente de trabajo, enfermedad profesional e incapacidad no reconocida.',tags:['IMSS','Incapacidad','Riesgo laboral'],subs:['Accidente laboral','IMSS me rechaza','Enfermedad profesional']},
+  // PI
+  {id:'pi1',area:'pi',icon:'®️',title:'Registro de Marcas y Nombres Comerciales',desc:'Búsqueda de disponibilidad, solicitud de registro ante el IMPI y seguimiento hasta obtención del título. Protección nacional e internacional (Madrid).',tags:['Marca','IMPI','Registro'],subs:['Registrar mi marca','Conflicto de marca','Renovación de marca']},
+  {id:'pi2',area:'pi',icon:'💡',title:'Patentes y Diseños Industriales',desc:'Registro de invenciones, modelos de utilidad y diseños industriales. Libertad de operación y nulidades ante el IMPI.',tags:['Patente','Invención','Diseño Industrial'],subs:['Tengo una invención','Diseño industrial','Modelo de utilidad']},
+  {id:'pi3',area:'pi',icon:'📚',title:'Derechos de Autor e ISBN / ISSN',desc:'Registro de obras ante el INDAUTOR. Obtención de ISBN para libros e ISSN para publicaciones periódicas.',tags:['Derechos de Autor','INDAUTOR','ISBN'],subs:['Tengo un libro','Obra literaria','Obra musical']},
+  // AMPARO
+  {id:'a1',area:'amparo',icon:'🛡️',title:'Amparo Directo e Indirecto',desc:'Interposición y seguimiento de juicios de amparo contra actos de autoridad. Suspensión del acto reclamado y obtención de sentencia favorable.',tags:['Amparo','Juzgado','Suspensión'],subs:['Acto de autoridad','Amparo directo','Amparo indirecto']},
+  {id:'a2',area:'amparo',icon:'🏦',title:'Amparo por Congelamiento de Cuentas',desc:'Amparo urgente contra bloqueo de cuentas bancarias por órdenes ministeriales o administrativas. Resolución exprés.',tags:['Cuenta Bloqueada','Banco','Urgente'],subs:['Me bloquearon cuenta','Orden ministerial','Descongelamiento urgente']},
+  // DIGITAL
+  {id:'d1',area:'digital',icon:'🤖',title:'Compliance de Inteligencia Artificial',desc:'Auditoría legal de sistemas de IA. Responsabilidad por algoritmos, sesgos automatizados y cumplimiento normativo LFPDPPP.',tags:['IA','Compliance','Datos'],subs:['Uso IA en mi empresa','Regulación de datos','Algoritmo con sesgo'],isNew:true},
+  {id:'d2',area:'digital',icon:'🔗',title:'Litigio sobre NFTs y Criptomonedas',desc:'Reclamación judicial por fraudes en NFTs, recuperación en blockchain y litigio sobre smart contracts. Herencias digitales.',tags:['NFT','Crypto','Web3'],subs:['Me estafaron en crypto','Herencia digital','Smart contract'],isNew:true},
+  {id:'d3',area:'digital',icon:'🎨',title:'Propiedad Intelectual Generativa',desc:'Asesoría sobre autoría de obras generadas por IA, protección de prompts, licencias de contenido sintético e infracción por deepfakes.',tags:['PI Generativa','Deepfake','IA Creativa'],subs:['Obra creada con IA','Deepfake de mi imagen','Licencia de contenido'],isNew:true},
+];
+
+/* ── DATOS DE SUBSITUACIONES POR ÁREA ───────────── */
+const SUBS_MAP = {
+  penal:    ['Acusado de un delito','Soy víctima de un delito','Presentar una denuncia','Violencia familiar','Tengo juicio oral en proceso','Necesito amparo penal'],
+  familiar: ['Quiero divorciarme','Pensión alimenticia','Custodia de mis hijos','Visitas de hijos negadas','Falleció un familiar','Error en acta civil'],
+  civil:    ['Problema con un contrato','Compraventa de inmueble','Crédito hipotecario','Me causaron daños','Deuda de arrendamiento','Herencia de bienes'],
+  mercantil:['Me deben dinero con pagaré','Incumplimiento de contrato','Disputa comercial','Tercería en juicio','Cobro de facturas','Empresa en conflicto'],
+  laboral:  ['Me despidieron injustificadamente','No me pagan prestaciones','Accidente de trabajo','IMSS no reconoce incapacidad','Horas extras no pagadas','Acoso laboral'],
+  pi:       ['Quiero registrar mi marca','Conflicto de marca similar','Tengo una invención','Diseño industrial','Publicar un libro (ISBN)','Obra con derechos de autor'],
+  amparo:   ['Acto de autoridad ilegal','Me bloquearon mi cuenta bancaria','Amparo en materia penal','Amparo fiscal','Amparo laboral','Orden de aprehensión'],
+  digital:  ['Uso IA en mi empresa','Me estafaron con NFTs','Deepfake de mi imagen','Regulación de datos LFPDPPP','Obra creada con IA','Smart contract fallido'],
+};
+
+/* ── PLANTILLAS POR SERVICIO ─────────────────────── */
+const TEMPLATE_MAP = {
+  penal: {
+    title:'Defensa Penal · Plan de Acción',
+    items:[
+      {icon:'📋',label:'Revisión de carpeta de investigación',desc:'Análisis de la imputación, datos de prueba y derechos del imputado ante el Ministerio Público.'},
+      {icon:'⚖️',label:'Estrategia de audiencias',desc:'Preparación de argumentos para audiencia inicial, vinculación a proceso, intermedia y juicio oral.'},
+      {icon:'🛡️',label:'Recursos y amparos',desc:'Interposición de recursos de apelación y juicios de amparo ante vulneración de derechos fundamentales.'},
+      {icon:'📞',label:'Asesoría inmediata',desc:'Llamada de diagnóstico gratuita: 55 74 12 43 80. Atención en 24 horas.'},
+    ]
+  },
+  familiar:{
+    title:'Derecho Familiar · Hoja de Ruta',
+    items:[
+      {icon:'📄',label:'Diagnóstico familiar',desc:'Evaluación de la situación: bienes, hijos, pensión y régimen patrimonial.'},
+      {icon:'🤝',label:'Mediación o litigio',desc:'Determinamos si conviene mediación o demanda judicial según el conflicto específico.'},
+      {icon:'⚖️',label:'Expediente y demanda',desc:'Integración del expediente y presentación de demanda ante el Juzgado Familiar.'},
+      {icon:'📞',label:'Consulta confidencial',desc:'Tu privacidad es prioridad. Llama: 55 74 12 43 80'},
+    ]
+  },
+  civil:{
+    title:'Derecho Civil · Protocolo',
+    items:[
+      {icon:'📜',label:'Revisión de documentos',desc:'Análisis de contratos, escrituras, sentencias y actos jurídicos relevantes.'},
+      {icon:'💰',label:'Cuantificación del daño',desc:'Determinación de daños materiales, lucro cesante y daño moral.'},
+      {icon:'⚖️',label:'Demanda civil',desc:'Interposición de demanda ante Juzgado Civil y seguimiento hasta ejecución.'},
+      {icon:'📞',label:'Consulta inicial gratuita',desc:'Llama: 55 74 12 43 80'},
+    ]
+  },
+  mercantil:{
+    title:'Derecho Mercantil · Proceso de Cobro',
+    items:[
+      {icon:'📊',label:'Análisis del documento de crédito',desc:'Revisión de pagaré, factura o contrato para determinar vía ejecutiva óptima.'},
+      {icon:'⚡',label:'Juicio ejecutivo mercantil',desc:'Presentación de demanda con embargo preventivo para asegurar el cobro.'},
+      {icon:'🔒',label:'Embargo y remate',desc:'En caso de incumplimiento: localización, embargo y remate de bienes del deudor.'},
+      {icon:'📞',label:'Consulta gratuita',desc:'Llama: 55 74 12 43 80'},
+    ]
+  },
+  laboral:{
+    title:'Derecho Laboral · Ruta de Defensa',
+    items:[
+      {icon:'📋',label:'Cálculo de liquidación',desc:'Determinamos partes proporcionales de: vacaciones, prima, aguinaldo, 20 días, 12 años e indemnización constitucional.'},
+      {icon:'⚖️',label:'Demanda ante JLCA / TFJA',desc:'Presentación de demanda laboral con evidencia digital y testimonial.'},
+      {icon:'🔄',label:'Reinstalación o indemnización',desc:'Negociamos reinstalación o el máximo de indemnización posible.'},
+      {icon:'📞',label:'Asesoría urgente',desc:'Llama: 55 74 12 43 80'},
+    ]
+  },
+  pi:{
+    title:'Propiedad Intelectual · Registro',
+    items:[
+      {icon:'🔍',label:'Búsqueda de antecedentes',desc:'Análisis de registros previos en la base del IMPI para verificar disponibilidad.'},
+      {icon:'📝',label:'Solicitud de registro',desc:'Preparación y presentación de solicitud ante el IMPI con clasificación de Niza.'},
+      {icon:'🌍',label:'Protección internacional',desc:'Extensión del registro vía Protocolo de Madrid a más de 120 países.'},
+      {icon:'📞',label:'Consulta',desc:'Llama: 55 74 12 43 80'},
+    ]
+  },
+  amparo:{
+    title:'Amparo · Protocolo de Acción',
+    items:[
+      {icon:'⚡',label:'Análisis urgente del acto',desc:'Revisión inmediata del acto reclamado para determinar procedencia y plazo.'},
+      {icon:'⏱️',label:'Solicitud de suspensión',desc:'Presentación urgente de suspensión provisional o definitiva para detener el acto.'},
+      {icon:'📋',label:'Demanda de amparo',desc:'Elaboración y presentación de demanda de amparo con conceptos de violación precisos.'},
+      {icon:'📞',label:'Atención urgente 24h',desc:'Llama: 55 74 12 43 80'},
+    ]
+  },
+  digital:{
+    title:'LegalTech 2026 · Plan Digital',
+    items:[
+      {icon:'🤖',label:'Diagnóstico legal digital',desc:'Identificación de riesgos legales en sistemas de IA, activos digitales y propiedad intelectual generativa.'},
+      {icon:'📋',label:'Mapa de cumplimiento',desc:'Plan de compliance para LFPDPPP, normativa de IA y regulación Web3 en México.'},
+      {icon:'⚖️',label:'Estrategia de litigio digital',desc:'Somos el primer despacho en México con experiencia en litigio sobre NFTs, deepfakes y PI generativa.'},
+      {icon:'📞',label:'Consulta especializada',desc:'Llama: 55 74 12 43 80'},
+    ]
+  },
+};
+
+/* ── LABELS ──────────────────────────────────────── */
+const AREA_LABELS = {
+  penal:'Derecho Penal', familiar:'Derecho Familiar', civil:'Derecho Civil',
+  mercantil:'Derecho Mercantil', laboral:'Derecho Laboral',
+  pi:'Propiedad Intelectual', amparo:'Amparo', digital:'IA · Digital · Web3',
+};
+
+let wizArea = '', wizSub = '';
+
+function wizStep1(area){
+  wizArea = area;
+  // Marcar paso 1 como hecho
+  document.getElementById('ws1').className='wiz-step done';
+  document.getElementById('ws2').className='wiz-step active';
+  // Llenar subsituaciones
+  const grid = document.getElementById('wiz-sub-grid');
+  const subs = SUBS_MAP[area] || [];
+  grid.innerHTML = subs.map(s=>`
+    <button class="svc-sub-btn" onclick="wizStep2('${s.replace(/'/g,"\\'")}')">
+      <span style="color:var(--dorado);font-size:16px">→</span> ${s}
+    </button>
+  `).join('');
+  // Cambiar paneles
+  document.getElementById('wp1').className='wiz-panel';
+  document.getElementById('wp2').className='wiz-panel active';
+  document.getElementById('wiz-steps').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function wizStep2(sub){
+  wizSub = sub;
+  document.getElementById('ws2').className='wiz-step done';
+  document.getElementById('ws3').className='wiz-step active';
+  // Buscar servicios relevantes
+  const matches = SERVICIOS_DB.filter(s=>s.area===wizArea).slice(0,2);
+  const tpl = TEMPLATE_MAP[wizArea] || TEMPLATE_MAP.penal;
+  const isNew = wizArea==='digital';
+  const tagClass = isNew?'new':'';
+  const resultGrid = document.getElementById('wiz-result-grid');
+  resultGrid.innerHTML = `
+    <div class="svc-result-left">
+      <h3>${AREA_LABELS[wizArea]}</h3>
+      <p>Basado en tu situación: <strong style="color:var(--dorado2)">"${wizSub}"</strong>, estos son los servicios que EAG Soluciones Legales tiene para ti.</p>
+      <div class="svc-result-tags">
+        ${matches.map(m=>`<span class="svc-tag ${tagClass}">${m.title}</span>`).join('')}
+        <span class="svc-tag ${tagClass}">+ Asesoría gratuita</span>
+      </div>
+      <div class="svc-cta-wrap">
+        <a href="tel:55 74 12 43 80" class="svc-cta-primary">📞 Llamar ahora — 55 74 12 43 80</a>
+        <a href="mailto:eag.soluciones.legales@gmail.com" class="svc-cta-secondary">✉️ Escribir por correo</a>
+        <a href="https://wa.me/5255 74124380?text=Hola%2C%20tengo%20un%20asunto%20de%20${encodeURIComponent(AREA_LABELS[wizArea])}%20y%20quisiera%20asesor%C3%ADa." target="_blank" class="svc-cta-secondary" style="border-color:rgba(74,222,128,.3);color:#4ade80;">💬 WhatsApp</a>
+      </div>
+    </div>
+    <div class="svc-template">
+      <h4>📋 ${tpl.title}</h4>
+      ${tpl.items.map(it=>`
+        <div class="svc-tpl-item">
+          <div class="svc-tpl-icon">${it.icon}</div>
+          <div class="svc-tpl-txt"><strong>${it.label}</strong><span>${it.desc}</span></div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+  document.getElementById('wp2').className='wiz-panel';
+  document.getElementById('wp3').className='wiz-panel active';
+  // Alimentar el feed con área seleccionada
+  feedFilter(wizArea, null);
+  document.getElementById('wiz-result-grid').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function wizBack(toPanel){
+  if(toPanel===1){
+    document.getElementById('ws1').className='wiz-step active';
+    document.getElementById('ws2').className='wiz-step';
+    document.getElementById('wp2').className='wiz-panel';
+    document.getElementById('wp1').className='wiz-panel active';
+  } else {
+    document.getElementById('ws2').className='wiz-step active';
+    document.getElementById('ws3').className='wiz-step';
+    document.getElementById('wp3').className='wiz-panel';
+    document.getElementById('wp2').className='wiz-panel active';
+  }
+}
+
+function wizReset(){
+  wizArea=''; wizSub='';
+  ['ws1','ws2','ws3'].forEach((id,i)=>{
+    document.getElementById(id).className='wiz-step'+(i===0?' active':'');
+  });
+  document.getElementById('wp1').className='wiz-panel active';
+  document.getElementById('wp2').className='wiz-panel';
+  document.getElementById('wp3').className='wiz-panel';
+  feedFilter('todos',document.querySelector('.feed-tab'));
+}
+
+/* ── FEED DE SERVICIOS ───────────────────────────── */
+function feedFilter(area, btn){
+  // Tabs
+  document.querySelectorAll('.feed-tab').forEach(t=>t.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  else {
+    // Activar tab correcto
+    document.querySelectorAll('.feed-tab').forEach(t=>{
+      if(t.textContent.toLowerCase().includes(area.slice(0,3))) t.classList.add('active');
+    });
+  }
+  const filtered = area==='todos' ? SERVICIOS_DB : SERVICIOS_DB.filter(s=>s.area===area);
+  const grid = document.getElementById('svc-feed-grid');
+  if(filtered.length===0){
+    grid.innerHTML='<div class="svc-feed-empty"><span>🔍</span>No hay servicios en esta categoría aún.</div>';
+    return;
+  }
+  grid.innerHTML = filtered.map(s=>`
+    <div class="svc-feed-card${s.isNew?' new-card':''}" onclick="wizStep1('${s.area}')">
+      <div class="sfc-icon">${s.icon}</div>
+      <div class="sfc-area${s.isNew?' new':''}">${AREA_LABELS[s.area].toUpperCase()}</div>
+      <div class="sfc-title">${s.title}</div>
+      <div class="sfc-desc">${s.desc}</div>
+      <div class="sfc-tags">${s.tags.map(t=>`<span class="sfc-tag">${t}</span>`).join('')}</div>
+    </div>
+  `).join('');
+}
+
+// Render inicial
+feedFilter('todos', document.querySelector('.feed-tab'));
+
+/* ============================
+   TRIAGE LEGAL (FOOTER)
+   ============================ */
+const triageData = {
+  penal: {
+    title:'Derecho Penal',
+    text:'Su caso corresponde al área de <b>Derecho Penal</b>. Nuestros especialistas en juicios orales, amparos y defensa penal están listos para atenderle. Contáctenos para una asesoría inmediata.',
+    action:'Llama ahora: 55 74 12 43 80'
+  },
+  civil: {
+    title:'Derecho Civil o Mercantil',
+    text:'Su situación podría involucrar <b>Derecho Civil o Mercantil</b>. Revisamos contratos, herencias, créditos y demandas mercantiles. Solicite su asesoría gratuita.',
+    action:'Llama ahora: 55 74 12 43 80'
+  },
+  familiar: {
+    title:'Derecho Familiar',
+    text:'Su caso pertenece al área de <b>Derecho Familiar</b>. Manejamos divorcios, pensiones alimenticias, custodia y más. Le brindaremos orientación confidencial y oportuna.',
+    action:'Llama ahora: 55 74 12 43 80'
+  },
+  digital: {
+    title:'Derecho Digital · IA · Web3',
+    text:'Su situación corresponde a nuestras <b>Nuevas Áreas LegalTech 2026</b>: Derecho de la IA, activos digitales o PI generativa. Somos los pioneros en litigio digital en México.',
+    action:'Llama ahora: 55 74 12 43 80'
+  },
+  laboral: {
+    title:'Derecho Laboral',
+    text:'Su caso es de <b>Derecho Laboral</b>. Atendemos despidos, reinstalaciones, vacaciones no pagadas y demás conflictos con empleadores ante la JLCA y el TFJA.',
+    action:'Llama ahora: 55 74 12 43 80'
+  }
+};
+function triage(type){
+  const d=triageData[type];
+  const el=document.getElementById('triage-result');
+  el.innerHTML=`<b style="color:var(--dorado2)">${d.title}</b><br><br>${d.text}<br><br><span style="color:var(--green);font-weight:700">📞 ${d.action}</span>`;
+  el.style.display='block';
+  el.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+/* ============================
+   AI READER
+   ============================ */
+async function summarizeText(){
+  const input=document.getElementById('reader-input').value.trim();
+  const output=document.getElementById('reader-output');
+  if(!input){output.textContent='Por favor pega un texto legal para resumir.';return;}
+  output.innerHTML='<span style="color:var(--dorado2)">⚡ Procesando con IA…</span>';
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system:'Eres un asistente jurídico especializado en derecho mexicano. Resume textos legales de forma clara y estructurada en máximo 5 puntos clave. Responde siempre en español.',
+        messages:[{role:'user',content:`Resume este texto legal en 5 puntos clave concisos:\n\n${input.slice(0,4000)}`}]
+      })
+    });
+    const data=await res.json();
+    output.innerHTML=data.content?.[0]?.text?.replace(/\n/g,'<br>')||'No se pudo obtener respuesta.';
+  }catch(e){
+    output.textContent='Error al conectar con IA. Verifica tu conexión.';
+  }
+}
+function clearReader(){
+  document.getElementById('reader-input').value='';
+  document.getElementById('reader-output').textContent='El resumen IA aparecerá aquí…';
+}
+
+/* ============================
+   AI CHATBOT
+   ============================ */
+let aiOpen=false;
+function toggleAI(){
+  aiOpen=!aiOpen;
+  const panel=document.getElementById('ai-panel');
+  const btn=document.getElementById('ai-fab-btn');
+  panel.classList.toggle('open',aiOpen);
+  btn.textContent=aiOpen?'✕':'⚖️';
+}
+function addMsg(text,role){
+  const msgs=document.getElementById('ai-msgs');
+  const div=document.createElement('div');
+  div.className=`ai-msg ${role}`;
+  div.innerHTML=text;
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+async function aiQuick(text){
+  document.getElementById('ai-qbtns').style.display='none';
+  addMsg(text,'user');
+  await aiRespond(text);
+}
+async function aiSend(){
+  const inp=document.getElementById('ai-inp');
+  const text=inp.value.trim();
+  if(!text)return;
+  inp.value='';
+  document.getElementById('ai-qbtns').style.display='none';
+  addMsg(text,'user');
+  await aiRespond(text);
+}
+async function aiRespond(userMsg){
+  addMsg('<em style="color:var(--tm-5)">Escribiendo…</em>','bot');
+  const msgs=document.getElementById('ai-msgs');
+  const typing=msgs.lastElementChild;
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system:'Eres el asistente legal de EAG Soluciones Legales, un despacho en Ciudad de México especializado en derecho penal, civil, familiar, mercantil, laboral, amparo, propiedad intelectual y las nuevas áreas de 2026: Derecho de la IA, activos digitales Web3 y PI generativa. Ayuda a los usuarios a clasificar su problema legal, oriéntalos brevemente y recomiéndales llamar al 55 74 12 43 80 para asesoría gratuita. Sé conciso, cálido y profesional. Responde siempre en español.',
+        messages:[{role:'user',content:userMsg}]
+      })
+    });
+    const data=await res.json();
+    const reply=data.content?.[0]?.text||'Gracias por contactarnos. Por favor llame al 55 74 12 43 80 para asesoría inmediata.';
+    typing.innerHTML=reply.replace(/\n/g,'<br>');
+  }catch(e){
+    typing.innerHTML='Por favor contáctenos al <b style="color:var(--dorado2)">55 74 12 43 80</b> para asesoría inmediata.';
+  }
+}/* ============================
+   CVU TABS
+   ============================ */
+function cvuTab(id, btn){
+  switchTab(id, btn);
+}
+
+/* ============================================================
+   switchTab(tabId, btn)
+   Función genérica de manejo de pestañas. Usada actualmente por
+   las pestañas del CVU (Formación / Docencia / Diplomados /
+   Ponencias / Investigación) y reutilizable para cualquier futuro
+   grupo de pestañas que siga el mismo patrón:
+     .cvu-tab (botón)  +  #tab-<id> (panel, clase .cvu-panel)
+   ============================================================ */
+function switchTab(tabId, btn){
+  const panel = document.getElementById('tab-' + tabId);
+  if(!panel) return;
+  document.querySelectorAll('.cvu-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.cvu-tab').forEach(t => t.classList.remove('active'));
+  panel.classList.add('active');
+  if(btn){
+    btn.classList.add('active');
+  }else{
+    // Si no se pasó el botón (p. ej. llamada programática), lo localizamos por su onclick
+    document.querySelectorAll('.cvu-tab').forEach(t=>{
+      if(t.getAttribute('onclick') && t.getAttribute('onclick').includes(`'${tabId}'`)) t.classList.add('active');
+    });
+  }
+}
+
+/* ============================================================
+   MODO OSCURO / MODO CLARO
+   ============================================================ */
+function toggleTheme(){
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  try{ localStorage.setItem('eag-theme', next); }catch(e){}
+}
+
+// Si el usuario no ha elegido manualmente un tema, seguir la preferencia del sistema en vivo
+if(window.matchMedia){
+  window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', function(e){
+    try{
+      if(!localStorage.getItem('eag-theme')){
+        document.documentElement.setAttribute('data-theme', e.matches ? 'light' : 'dark');
+      }
+    }catch(err){}
+  });
+}
+
+/* ============================================================
+   SISTEMA GENÉRICO DE MODALES
+   ============================================================ */
+function openModal(id){
+  const modal = document.getElementById(id);
+  if(!modal) return;
+  modal.classList.add('open');
+  document.body.classList.add('modal-locked');
+  if(id === 'modal-cv') renderCV();
+  // Cerrar con tecla Escape
+  document.addEventListener('keydown', escCloseHandler);
+}
+function closeModal(id){
+  const modal = document.getElementById(id);
+  if(!modal) return;
+  modal.classList.remove('open');
+  document.body.classList.remove('modal-locked');
+  document.removeEventListener('keydown', escCloseHandler);
+}
+function escCloseHandler(e){
+  if(e.key === 'Escape'){
+    document.querySelectorAll('.modal-overlay.open').forEach(m => closeModal(m.id));
+  }
+}
+
+/* ============================================================
+   CV COMPLETO — render + copiar al portapapeles
+   ============================================================ */
+function renderCV(){
+  const body = document.getElementById('modal-cv-body');
+  if(!body) return;
+  body.textContent =
+`EAG SOLUCIONES LEGALES — Magister Iuris
+Ciudad de México · 55 74 12 43 80
+
+FORMACIÓN ACADÉMICA
+— Licenciatura en Derecho
+— Maestría en Derecho (Magister Iuris) — UAM Azcapotzalco
+
+DOCENCIA
+— Instructor y ponente en 11 cursos especializados en litigio, IA aplicada al derecho y propiedad intelectual.
+
+DIPLOMADOS Y CERTIFICACIONES
+— 8 diplomados y certificaciones en áreas de derecho digital, compliance y litigio estratégico.
+
+PONENCIAS
+— 14 ponencias en congresos, seminarios y foros jurídicos nacionales.
+
+INVESTIGACIÓN E INSTITUCIONAL
+— 5 actividades de coordinación, investigación y apoyo institucional.
+
+ÁREAS DE PRÁCTICA
+Derecho Penal · Civil · Mercantil · Familiar · Laboral · Amparo
+Propiedad Intelectual · Derecho de la IA, Web3 y activos digitales
+
+Contacto: 55 74 12 43 80 · eag.soluciones.legales@gmail.com`;
+}
+
+async function copyCV(){
+  const body = document.getElementById('modal-cv-body');
+  const toast = document.getElementById('modal-copy-toast');
+  if(!body) return;
+  const text = body.textContent;
+  try{
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      await navigator.clipboard.writeText(text);
+    }else{
+      // Fallback para navegadores sin Clipboard API
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+    if(toast){
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+  }catch(e){
+    if(toast){
+      toast.textContent = 'No se pudo copiar. Selecciona el texto manualmente.';
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+  }
+}
+</script>
